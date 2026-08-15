@@ -1,0 +1,21 @@
+<% content_for :title, "Категории — DG CMS" %>
+<div class="admin-container">
+  <div class="page-heading"><div><p class="page-eyebrow">Контент</p><h1>Категории</h1></div><%= link_to new_admin_category_path, class: "admin-button is-primary" do %><%= admin_icon(:plus) %><span>Добавить категорию</span><% end %></div>
+  <section class="collection-panel">
+    <div class="filter-row">
+      <label class="filter-search"><%= admin_icon(:search) %><input type="search" placeholder="Поиск по категориям" disabled></label>
+      <label class="filter-control"><span>Дата добавления</span><select disabled><option>Сначала новые</option></select></label>
+      <label class="filter-control"><span>По алфавиту</span><select disabled><option>А–Я</option></select></label>
+      <label class="filter-control"><span>Статус</span><select disabled><option>Все</option></select></label>
+      <button class="admin-button filter-columns" type="button" disabled><%= admin_icon(:sliders) %>Столбцы</button>
+    </div>
+    <div class="collection-table-card">
+      <div class="collection-summary"><span>Всего: <strong><%= @categories.size %></strong></span><span>Опубликовано: <strong><%= @categories.count(&:published?) %></strong></span><span>Не опубликовано: <strong><%= @categories.count(&:draft?) %></strong></span></div>
+      <div class="collection-scroll"><table class="collection-table"><thead><tr><th class="check-cell"><input type="checkbox" disabled></th><th>Категория</th><th>Статус</th><th>Статей</th><th>Дата добавления</th><th></th></tr></thead><tbody>
+        <% if @categories.any? %><% @categories.each do |category| %><tr><td class="check-cell"><input type="checkbox" disabled></td><td><strong><%= category.name %></strong></td><td><span class="status-badge is-<%= category.status %>"><%= category.published? ? "Опубликовано" : "Черновик" %></span></td><td><span class="count-chip"><%= category.articles_count %></span></td><td class="material-date"><%= category.created_at.strftime("%d.%m.%Y") %></td><td><%= admin_icon(:dots) %></td></tr><% end %>
+        <% else %><tr><td colspan="6"><%= render "admin/shared/empty_collection", icon: :folder, title: "Категорий пока нет", text: "Здесь появятся созданные категории." %></td></tr><% end %>
+      </tbody></table></div>
+      <div class="collection-footer"><span>Показано <%= @categories.size %> из <%= @categories.size %> категорий</span></div>
+    </div>
+  </section>
+</div>

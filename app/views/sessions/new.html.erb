@@ -1,0 +1,22 @@
+<% content_for :title, "Вход — Goncharoff.pro" %>
+
+<main class="flex min-h-screen items-center justify-center px-4 py-12">
+  <section class="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <p class="text-sm font-semibold text-blue-600">Goncharoff.pro</p>
+    <h1 class="mt-2 text-3xl font-bold tracking-tight">Вход в панель</h1>
+    <p class="mt-2 text-sm text-slate-500">Введите данные администратора или редактора.</p>
+
+    <%= form_with url: session_path, class: "mt-8 space-y-5" do |form| %>
+      <div>
+        <%= form.label :email, "Email", class: "mb-2 block text-sm font-medium" %>
+        <%= form.email_field :email, required: true, autofocus: true, autocomplete: "email", class: "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" %>
+      </div>
+      <div>
+        <%= form.label :password, "Пароль", class: "mb-2 block text-sm font-medium" %>
+        <%= form.password_field :password, required: true, autocomplete: "current-password", class: "w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100" %>
+      </div>
+      <%= form.submit "Войти", class: "w-full cursor-pointer rounded-xl bg-slate-900 px-4 py-3 font-semibold text-white transition hover:bg-slate-700" %>
+    <% end %>
+  </section>
+</main>
+

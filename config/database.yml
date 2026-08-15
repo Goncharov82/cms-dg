@@ -1,0 +1,46 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
+  port: <%= ENV.fetch("DATABASE_PORT", 5432) %>
+  username: <%= ENV.fetch("DATABASE_USERNAME", "goncharoff") %>
+  password: <%= ENV["DATABASE_PASSWORD"] %>
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+
+development:
+  primary: &development_primary
+    <<: *default
+    database: <%= ENV.fetch("DATABASE_NAME", "goncharoff_pro_development") %>
+  cache:
+    <<: *development_primary
+    database: <%= ENV.fetch("DATABASE_CACHE_NAME", "goncharoff_pro_development_cache") %>
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *development_primary
+    database: <%= ENV.fetch("DATABASE_QUEUE_NAME", "goncharoff_pro_development_queue") %>
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *development_primary
+    database: <%= ENV.fetch("DATABASE_CABLE_NAME", "goncharoff_pro_development_cable") %>
+    migrations_paths: db/cable_migrate
+
+test:
+  <<: *default
+  database: goncharoff_pro_test
+
+production:
+  primary: &production_primary
+    <<: *default
+    database: <%= ENV.fetch("DATABASE_NAME", "goncharoff_pro_production") %>
+  cache:
+    <<: *production_primary
+    database: <%= ENV.fetch("DATABASE_CACHE_NAME", "goncharoff_pro_production_cache") %>
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *production_primary
+    database: <%= ENV.fetch("DATABASE_QUEUE_NAME", "goncharoff_pro_production_queue") %>
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *production_primary
+    database: <%= ENV.fetch("DATABASE_CABLE_NAME", "goncharoff_pro_production_cable") %>
+    migrations_paths: db/cable_migrate

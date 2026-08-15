@@ -1,0 +1,5 @@
+<% content_for :title, "#{@article.title} — DG CMS" %>
+<div class="admin-container">
+  <div class="page-heading"><div><p class="page-eyebrow">Статья</p><h1><%= @article.title %></h1></div><div class="page-heading-actions"><%= link_to edit_admin_article_path(@article), class: "admin-button is-primary" do %><%= admin_icon(:edit) %><span>Редактировать</span><% end %><%= link_to admin_articles_path, class: "admin-button" do %><%= admin_icon(:back) %><span>К списку</span><% end %></div></div>
+  <section class="admin-card"><div class="admin-card-body"><dl class="detail-list"><dt>Статус</dt><dd><span class="status-badge is-<%= @article.status %>"><%= @article.published? ? "Опубликовано" : "Черновик" %></span></dd><dt>Категория</dt><dd><%= @article.category&.name || "Без категории" %></dd><dt>Описание</dt><dd><%= @article.excerpt.presence || "—" %></dd><dt>Содержание</dt><dd class="article-content"><%= @article.body %></dd></dl></div></section>
+</div>

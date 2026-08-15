@@ -1,0 +1,31 @@
+<div class="sidebar-backdrop hidden" data-sidebar-target="backdrop" data-action="click->sidebar#close"></div>
+<aside class="admin-sidebar -translate-x-full lg:translate-x-0" data-sidebar-target="panel">
+  <div class="sidebar-brand-row">
+    <%= link_to admin_root_path, class: "brand-lockup", aria: { label: "DG CMS" } do %>
+      <span class="brand-mark"><span class="brand-d">D</span><span class="brand-g">G</span></span>
+      <span class="brand-title">DG CMS</span>
+    <% end %>
+    <button type="button" class="sidebar-close" data-action="sidebar#close" aria-label="Закрыть меню"><%= admin_icon(:close) %></button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <%= render "admin/shared/nav_item", label: "Дашборд", icon: :dashboard, path: admin_root_path %>
+    <div class="sidebar-group" data-controller="nav-group" data-nav-group-open-value="<%= request.path.start_with?(admin_categories_path) || request.path.start_with?(admin_articles_path) %>">
+      <div class="sidebar-group-row <%= request.path.start_with?(admin_categories_path) ? "is-active" : "" %>">
+        <%= link_to admin_categories_path, class: "sidebar-group-link" do %><%= admin_icon(:folder, class_name: "sidebar-icon") %><span>Категории</span><% end %>
+        <button type="button" class="sidebar-group-toggle" data-action="nav-group#toggle" aria-label="Свернуть или развернуть раздел"><span data-nav-group-target="chevron"><%= admin_icon(:chevron_down, class_name: "sidebar-chevron") %></span></button>
+      </div>
+      <div class="sidebar-submenu" data-nav-group-target="items">
+        <%= link_to admin_articles_path, class: "sidebar-sublink #{request.path.start_with?(admin_articles_path) ? "is-active" : ""}" do %><%= admin_icon(:articles, class_name: "sidebar-icon") %><span>Статьи</span><% end %>
+      </div>
+    </div>
+    <%= render "admin/shared/nav_item", label: "Страницы", icon: :page, path: admin_pages_path %>
+    <%= render "admin/shared/nav_item", label: "Меню сайта", icon: :menu, path: admin_site_menu_path %>
+    <%= render "admin/shared/nav_item", label: "Медиафайлы", icon: :image %>
+    <%= render "admin/shared/nav_item", label: "Аналитика", icon: :chart, path: admin_analytics_path %>
+  </nav>
+
+  <div class="sidebar-footer">
+    <%= render "admin/shared/nav_item", label: "Настройки", icon: :settings %>
+  </div>
+</aside>
