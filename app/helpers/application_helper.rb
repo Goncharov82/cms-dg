@@ -40,6 +40,6 @@ module ApplicationHelper
   end
 
   def admin_display_name(user)
-    user.admin? ? "Администратор" : user.email.split("@").first.tr("._-", " ").titleize
+    user.admin? ? "Дмитрий Гончаров" : user.email.split("@").first.tr("._-", " ").titleize
   end
 end

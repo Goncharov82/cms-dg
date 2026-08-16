@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     root "dashboard#index"
     resources :articles
     resources :categories, only: %i[index new create]
-    resources :pages, only: :index
+    resources :pages, only: %i[index new create]
     resource :site_menu, only: :show, controller: "site_menu"
     resources :menu_items, only: %i[new create], path: "site_menu/items", controller: "menu_items"
     resource :analytics, only: :show

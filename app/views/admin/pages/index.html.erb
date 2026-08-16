@@ -1,6 +1,19 @@
 <% content_for :title, "Страницы — DG CMS" %>
-<div class="admin-container"><div class="page-heading"><div><p class="page-eyebrow">Контент</p><h1>Страницы</h1></div><button class="admin-button is-primary is-disabled" type="button" disabled><%= admin_icon(:plus) %><span>Добавить страницу</span></button></div>
-  <section class="collection-panel"><div class="filter-row"><label class="filter-search"><%= admin_icon(:search) %><input type="search" placeholder="Поиск по страницам" disabled></label><label class="filter-control"><span>Дата изменения</span><select disabled><option>Сначала новые</option></select></label><label class="filter-control"><span>Тип страницы</span><select disabled><option>Все типы</option></select></label><label class="filter-control"><span>Статус</span><select disabled><option>Все</option></select></label><button class="admin-button filter-columns" disabled><%= admin_icon(:sliders) %>Столбцы</button></div>
-    <div class="collection-table-card"><div class="collection-summary"><span>Всего: <strong>0</strong></span><span>Опубликовано: <strong>0</strong></span><span>Черновики: <strong>0</strong></span><span>Системные: <strong>0</strong></span></div><div class="bulk-row"><select disabled><option>Действия с выбранными</option></select><button class="admin-button" disabled>Применить</button></div><div class="collection-scroll"><table class="collection-table"><thead><tr><th class="check-cell"><input type="checkbox" disabled></th><th>Название</th><th>Тип</th><th>URL / Алиас</th><th>Статус</th><th>Автор</th><th>Изменено</th><th></th></tr></thead><tbody><tr><td colspan="8"><%= render "admin/shared/empty_collection", icon: :page, title: "Страниц пока нет", text: "Структура раздела готова. Форму добавления создадим по отдельному макету." %></td></tr></tbody></table></div><div class="collection-footer"><span>Показано 0 из 0 страниц</span></div></div>
+<div class="admin-container">
+  <div class="page-heading"><div><p class="page-eyebrow">Контент</p><h1>Страницы</h1></div><%= link_to new_admin_page_path, class: "admin-button is-primary" do %><%= admin_icon(:plus) %><span>Добавить страницу</span><% end %></div>
+  <section class="collection-panel">
+    <div class="filter-row"><label class="filter-search"><%= admin_icon(:search) %><input type="search" placeholder="Поиск по страницам" disabled></label><label class="filter-control"><span>Дата изменения</span><select disabled><option>Сначала новые</option></select></label><label class="filter-control"><span>Тип страницы</span><select disabled><option>Все типы</option></select></label><label class="filter-control"><span>Статус</span><select disabled><option>Все</option></select></label><button class="admin-button filter-columns" disabled><%= admin_icon(:sliders) %>Столбцы</button></div>
+    <div class="collection-table-card">
+      <div class="collection-summary"><span>Всего: <strong><%= @pages.size %></strong></span><span>Опубликовано: <strong><%= @pages.count(&:published?) %></strong></span><span>Черновики: <strong><%= @pages.count(&:draft?) %></strong></span><span>Системные: <strong>0</strong></span></div>
+      <div class="bulk-row"><select disabled><option>Действия с выбранными</option></select><button class="admin-button" disabled>Применить</button></div>
+      <div class="collection-scroll"><table class="collection-table"><thead><tr><th class="check-cell"><input type="checkbox" disabled></th><th>Название</th><th>Тип</th><th>URL / Алиас</th><th>Статус</th><th>Автор</th><th>Изменено</th><th></th></tr></thead><tbody>
+        <% if @pages.any? %>
+          <% @pages.each do |page| %><tr><td class="check-cell"><input type="checkbox" disabled></td><td><strong class="table-primary"><%= page.title %></strong></td><td>Кастомная</td><td><code><%= page.slug == "/" ? "/" : "/#{page.slug}" %></code></td><td><span class="status-badge <%= page.published? ? "is-published" : "is-draft" %>"><%= page.published? ? "Опубликовано" : "Черновик" %></span></td><td><%= admin_display_name(current_user) %></td><td><%= l(page.updated_at, format: :short) %></td><td></td></tr><% end %>
+        <% else %>
+          <tr><td colspan="8"><%= render "admin/shared/empty_collection", icon: :page, title: "Страниц пока нет", text: "Создайте первую страницу, чтобы она появилась в этом списке." %></td></tr>
+        <% end %>
+      </tbody></table></div>
+      <div class="collection-footer"><span>Показано <%= @pages.size %> из <%= @pages.size %> страниц</span></div>
+    </div>
   </section>
 </div>

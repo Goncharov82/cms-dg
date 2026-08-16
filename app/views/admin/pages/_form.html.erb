@@ -1,0 +1,39 @@
+<%= form_with model: [:admin, page], data: { controller: "page-form" }, class: "page-editor-form" do |form| %>
+  <div class="admin-container">
+    <div class="editor-breadcrumb"><%= link_to "Страницы", admin_pages_path %><span>/</span><span>Добавление страницы</span></div>
+    <div class="editor-heading"><h1>Добавление страницы</h1><div class="editor-actions"><%= link_to "Отмена", admin_pages_path, class: "editor-cancel" %><button type="submit" name="submit_action" value="draft" class="admin-button is-outline">Сохранить черновик</button><button type="submit" name="submit_action" value="published" class="admin-button is-primary">Опубликовать</button></div></div>
+    <% if page.errors.any? %><div class="error-box"><strong>Проверьте заполнение формы:</strong><ul><% page.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul></div><% end %>
+    <div class="page-editor-grid">
+      <section class="editor-card page-code-card" data-controller="tabs">
+        <div class="editor-tabs"><button type="button" class="is-active" data-tabs-target="tab" data-tabs-name="code" data-action="tabs#show">Код</button><button type="button" data-tabs-target="tab" data-tabs-name="seo" data-action="tabs#show">SEO</button></div>
+        <div class="editor-panel page-code-panel" data-tabs-target="panel" data-tabs-name="code">
+          <div class="page-form-meta"><div class="form-field"><%= form.label :title, "Название страницы *" %><%= form.text_field :title, class: "form-input", autofocus: true, data: { page_form_target: "title", action: "input->page-form#update" } %></div><div class="form-field"><%= form.label :slug, "Алиас *" %><%= form.text_field :slug, class: "form-input", data: { page_form_target: "slug", action: "input->page-form#update" } %><p class="form-hint">Главная страница использует корневой адрес сайта.</p></div></div>
+          <div class="page-code-workspace">
+            <div class="code-editor-box"><strong class="workspace-title">Код страницы</strong><div class="code-toolbar"><div class="code-tabs"><button type="button" class="is-active" data-page-form-target="codeTab" data-code="html" data-action="page-form#selectCode">HTML</button><button type="button" data-page-form-target="codeTab" data-code="css" data-action="page-form#selectCode">CSS</button><button type="button" data-page-form-target="codeTab" data-code="js" data-action="page-form#selectCode">JS</button></div><button type="button" class="workspace-button">&lt;&gt; Форматировать</button><button type="button" class="workspace-button">↻ Сбросить</button></div><div class="code-status"><i></i>Автосохранение включено</div><div class="code-input-wrap"><pre class="code-highlight" aria-hidden="true" data-page-form-target="highlight"></pre><%= form.text_area :body_html, class: "code-input", spellcheck: false, data: { page_form_target: "html", action: "input->page-form#renderPreview input->page-form#highlightCode scroll->page-form#syncCodeScroll" } %><%= form.text_area :body_css, class: "code-input", spellcheck: false, hidden: true, data: { page_form_target: "css", action: "input->page-form#renderPreview input->page-form#highlightCode scroll->page-form#syncCodeScroll" } %><%= form.text_area :body_js, class: "code-input", spellcheck: false, hidden: true, data: { page_form_target: "js", action: "input->page-form#renderPreview input->page-form#highlightCode scroll->page-form#syncCodeScroll" } %></div><div class="code-footer">HTML&nbsp;&nbsp;•&nbsp;&nbsp;12 строк&nbsp;&nbsp;•&nbsp;&nbsp;сохранено только что</div></div>
+            <div class="page-preview-box"><strong class="workspace-title">Предпросмотр</strong><div class="preview-controls"><span class="preview-device"><button type="button" class="is-active">Десктоп</button><button type="button">Мобильный</button></span><button type="button" class="preview-refresh" aria-label="Обновить предпросмотр">↻</button><span class="preview-live"><i></i>Обновляется автоматически</span></div><div class="preview-browser"><div class="browser-bar"><span></span><span></span><span></span><strong>goncharoff.pro</strong></div><iframe title="Предпросмотр страницы" sandbox="allow-scripts" data-page-form-target="preview"></iframe></div></div>
+          </div>
+        </div>
+        <div class="editor-panel page-seo-panel" data-tabs-target="panel" data-tabs-name="seo" hidden><section class="seo-preview-box"><div class="seo-preview-heading"><strong>Предпросмотр в поиске</strong></div><div class="search-result"><div class="search-site"><span class="search-favicon">DG</span><span><strong>goncharoff.pro</strong><span data-page-form-target="previewUrl">https://goncharoff.pro/novaya-stranitsa</span></span></div><div class="search-title" data-page-form-target="previewTitle">Новая страница</div><p>Описание страницы для поисковой выдачи.</p></div></section><div class="form-field"><%= form.label :seo_title, "SEO Title" %><%= form.text_field :seo_title, class: "form-input", maxlength: 60, placeholder: "Если пусто, используется название страницы" %></div><div class="form-field"><%= form.label :meta_description, "Meta Description" %><%= form.text_area :meta_description, class: "form-textarea seo-description", maxlength: 160, placeholder: "Описание страницы в поисковой выдаче" %></div><div class="form-field"><%= form.label :canonical_url, "Canonical URL" %><%= form.url_field :canonical_url, class: "form-input", placeholder: "https://goncharoff.pro/novaya-stranitsa" %></div></div>
+      </section>
+      <aside class="page-sidebar-stack">
+        <section class="publication-card page-publication-card">
+          <h2>Публикация</h2>
+          <%= form.hidden_field :status %>
+          <%= form.hidden_field :visibility %>
+          <div class="publication-summary-row"><span>Статус</span><strong>Черновик</strong></div>
+          <div class="publication-summary-row"><span>Видимость</span><strong>Публичная</strong></div>
+          <div class="page-saved-indicator"><%= admin_icon(:check) %><span>Изменения сохранены</span></div>
+        </section>
+        <section class="publication-card page-settings-card">
+          <h2>Настройки страницы</h2>
+          <div class="form-field"><label>Тип страницы</label><select class="form-select"><option>Кастомная</option></select></div>
+          <div class="form-field"><label>Маршрут</label><%= form.text_field :slug, class: "form-input", readonly: true, data: { page_form_target: "route" } %></div>
+          <label class="page-check"><%= form.check_box :include_in_sitemap %><span>Показывать в sitemap.xml</span></label>
+          <label class="page-check"><%= form.check_box :allow_indexing %><span>Разрешить индексацию</span></label>
+          <p class="form-hint output-hint">Стили и скрипты выполняются внутри изолированного предпросмотра.</p>
+        </section>
+      </aside>
+    </div>
+    <div class="page-security-note"><%= admin_icon(:check) %><span>Предпросмотр работает в изолированной области. Публикация доступна только администраторам.</span></div>
+  </div>
+<% end %>

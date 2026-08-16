@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_15_072000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_15_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -111,6 +111,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_072000) do
     t.string "visibility", default: "public", null: false
     t.index ["menu_name", "position"], name: "index_menu_items_on_menu_name_and_position"
     t.index ["slug"], name: "index_menu_items_on_slug", unique: true
+  end
+
+  create_table "pages", force: :cascade do |t|
+    t.boolean "allow_indexing", default: true, null: false
+    t.text "body_css"
+    t.text "body_html", null: false
+    t.text "body_js"
+    t.string "canonical_url"
+    t.datetime "created_at", null: false
+    t.boolean "include_in_sitemap", default: true, null: false
+    t.text "meta_description"
+    t.string "seo_title"
+    t.string "slug", null: false
+    t.integer "status", default: 0, null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.string "visibility", default: "public", null: false
+    t.index ["slug"], name: "index_pages_on_slug", unique: true
+    t.index ["status"], name: "index_pages_on_status"
   end
 
   create_table "users", force: :cascade do |t|

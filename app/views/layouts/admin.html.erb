@@ -25,7 +25,7 @@
           </div>
           <details class="profile-menu">
             <summary class="profile-trigger">
-              <span class="profile-avatar"><%= current_user.email.first.upcase %></span>
+              <span class="profile-avatar"><%= admin_display_name(current_user).first %></span>
               <span class="profile-name"><%= admin_display_name(current_user) %></span>
               <%= admin_icon(:chevron_down, class_name: "profile-chevron") %>
             </summary>

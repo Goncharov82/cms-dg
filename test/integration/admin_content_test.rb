@@ -20,6 +20,24 @@ class AdminContentTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "administrator can open and create a page" do
+    get new_admin_page_path
+    assert_response :success
+    assert_select "h1", "Добавление страницы"
+    assert_select "form[action='#{admin_pages_path}']"
+
+    assert_difference("Page.count") do
+      post admin_pages_path, params: {
+        submit_action: "published",
+        page: { title: "О компании", body_html: "<h1>О компании</h1>", body_css: "", body_js: "", visibility: "public", include_in_sitemap: "1", allow_indexing: "1" }
+      }
+    end
+
+    assert_redirected_to admin_pages_path
+    assert_predicate Page.last, :published?
+    assert_equal "o-kompanii", Page.last.slug
+  end
+
   test "administrator can create an article with seo settings" do
     assert_difference("Article.count") do
       post admin_articles_path, params: {
