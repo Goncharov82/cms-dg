@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Маркеторро: маркировка рекламы, бонус по партнёрской ссылке</title>
+<meta name="description" content="Маркеторро сам передаёт креативы в ОРД, получает erid и сдаёт отчёты в ЕРИР. По партнёрской ссылке: двойные лимиты или второй месяц в подарок к любому тарифу.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23374151'/%3E%3Ctext x='50' y='72' font-size='60' font-weight='900' font-family='Arial' fill='%23ffcb2c' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#374151;
+    --deep:#232b37;
+    --deeper:#1b222c;
+    --paper:#ffffff;
+    --soft:#f6f6f4;
+    --line:#e5e6e7;
+    --line-inv:rgba(255,255,255,.09);
+    --muted:#5f6774;
+    --muted-inv:#a7afbc;
+    --accent:#ffcb2c;
+    --accent-deep:#e8b400;
+    --font-d:'Unbounded','Arial Black',-apple-system,sans-serif;
+    --font-b:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{transition:none !important;animation:none !important}
+  }
+  body{font-family:var(--font-b);color:var(--ink);background:var(--paper);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 40px}
+  @media (max-width:640px){.wrap{padding:0 20px}}
+
+  /* ===== Header ===== */
+  header{position:sticky;top:0;z-index:50;background:var(--deeper);border-bottom:1px solid var(--line-inv)}
+  .head-in{display:flex;align-items:center;justify-content:space-between;padding:14px 0;gap:16px}
+  .logo{display:flex;align-items:center;gap:11px;font-weight:800;font-size:19px;color:#fff;text-decoration:none;letter-spacing:.2px}
+  .logo-m{width:36px;height:36px;border-radius:10px;background:var(--accent);color:var(--deeper);display:grid;place-items:center;font-family:var(--font-d);font-size:17px;font-weight:900}
+  .head-right{display:flex;align-items:center;gap:14px}
+  .head-tag{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted-inv);border:1px solid var(--line-inv);padding:7px 13px;border-radius:99px;white-space:nowrap}
+  .head-cta{font-size:14px;font-weight:800;color:var(--deeper);background:var(--accent);text-decoration:none;padding:10px 20px;border-radius:10px;white-space:nowrap;transition:background .15s ease}
+  .head-cta:hover{background:var(--accent-deep)}
+  @media (max-width:720px){.head-tag{display:none}}
+
+  /* ===== Hero ===== */
+  .hero{background:var(--deep);color:#fff;position:relative;overflow:hidden}
+  .hero-deco{position:absolute;right:-60px;top:-40px;font-family:var(--font-d);font-size:340px;line-height:1;font-weight:900;color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.06);user-select:none;pointer-events:none}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center;padding:88px 0 96px;position:relative}
+  @media (max-width:960px){
+    .hero-grid{grid-template-columns:1fr;gap:52px;padding:64px 0 72px}
+    .hero-deco{display:none}
+  }
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);margin-bottom:26px}
+  .eyebrow::before{content:"";width:30px;height:3px;background:var(--accent)}
+  h1{font-family:var(--font-d);font-size:clamp(30px,4.6vw,62px);line-height:1.06;font-weight:900;letter-spacing:-.01em;text-wrap:balance}
+  h1 .hl{background:var(--accent);color:var(--deep);padding:1px 12px;border-radius:8px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  .lead{margin-top:26px;font-size:17.5px;color:var(--muted-inv);max-width:31em}
+  .lead b{color:#fff}
+  .hero-cta{margin-top:36px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .cta-btn{
+    display:inline-block;background:var(--accent);color:var(--deep);
+    font-family:var(--font-b);font-size:17px;font-weight:800;text-decoration:none;
+    padding:18px 40px;border-radius:14px;
+    box-shadow:0 6px 0 var(--accent-deep);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .cta-btn:hover{transform:translateY(3px);box-shadow:0 3px 0 var(--accent-deep)}
+  .cta-btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  .promo-hint{font-size:14px;color:var(--muted-inv);max-width:15em}
+
+  /* Coupons */
+  .coupons{display:flex;flex-direction:column;gap:30px;position:relative}
+  .offer{
+    display:flex;position:relative;background:var(--paper);color:var(--ink);
+    border-radius:18px;box-shadow:0 24px 50px -18px rgba(0,0,0,.45);
+    transition:transform .18s ease;
+  }
+  .coupons .offer:nth-child(1){transform:rotate(-2deg)}
+  .coupons .offer:nth-child(2){transform:rotate(1.4deg)}
+  .coupons .offer:hover{transform:rotate(0) scale(1.02)}
+  @media (max-width:960px){
+    .coupons .offer:nth-child(1),.coupons .offer:nth-child(2){transform:none}
+  }
+  .offer-stub{
+    flex:0 0 128px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:var(--accent);border-right:2px dashed var(--deep);border-radius:18px 0 0 18px;
+    padding:26px 10px;text-align:center;
+  }
+  .offer-stub .val{font-family:var(--font-d);font-size:38px;font-weight:900;line-height:1;letter-spacing:-.02em}
+  .offer-stub .unit{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-top:9px}
+  .offer::before,.offer::after{
+    content:"";position:absolute;left:119px;width:20px;height:20px;border-radius:50%;
+    background:var(--deep);
+  }
+  .offer::before{top:-10px}
+  .offer::after{bottom:-10px}
+  .offer-body{padding:26px 28px;display:flex;flex-direction:column;gap:8px}
+  .offer-kicker{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--accent-deep)}
+  .offer-code{margin-top:6px;font-size:13px;color:var(--muted)}
+  .offer-code code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;font-weight:700;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:7px;padding:3px 9px;letter-spacing:.04em}
+  .offer h2{font-family:var(--font-d);font-size:20px;font-weight:700;line-height:1.25}
+  .offer p{font-size:15px;color:var(--muted)}
+  .offers-note{margin-top:2px;font-size:14px;color:var(--muted-inv)}
+  .offers-note b{color:#fff}
+
+  /* ===== Marquee ===== */
+  .marquee{background:var(--accent);border-block:2px solid var(--deep);overflow:hidden;padding:14px 0}
+  .marquee-track{display:flex;width:max-content;animation:mq 30s linear infinite}
+  @keyframes mq{to{transform:translateX(-50%)}}
+  .mq-set{display:flex;flex:none}
+  .mq-set span{font-family:var(--font-d);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--deep);white-space:nowrap;padding:0 18px;display:flex;align-items:center;gap:36px}
+  .mq-set span::after{content:"✶";font-size:15px}
+
+  /* ===== Steps ===== */
+  .steps{padding:96px 0}
+  @media (max-width:960px){.steps{padding:64px 0}}
+  .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:44px}
+  @media (max-width:960px){.steps-grid{grid-template-columns:1fr;gap:36px}}
+  .sec-title{font-family:var(--font-d);font-size:clamp(24px,2.6vw,34px);font-weight:900;line-height:1.15;letter-spacing:-.01em;text-wrap:balance}
+  .steps-intro .sec-title{max-width:7em}
+  .steps-intro p{margin-top:16px;font-size:15px;color:var(--muted)}
+  .step{border-left:2px solid var(--line);padding-left:26px}
+  @media (max-width:960px){.step{border-left:none;border-top:2px solid var(--line);padding:24px 0 0}}
+  .step-num{font-family:var(--font-d);font-size:54px;font-weight:900;line-height:1;color:var(--accent);text-shadow:3px 3px 0 var(--ink);margin-bottom:18px;display:block}
+  .step p{font-size:15.5px;color:var(--muted)}
+  .step p b{color:var(--ink)}
+
+  /* ===== About ===== */
+  .about{background:var(--soft);border-block:1px solid var(--line);padding:96px 0}
+  @media (max-width:960px){.about{padding:64px 0}}
+  .about-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:64px;align-items:start}
+  @media (max-width:960px){.about-grid{grid-template-columns:1fr;gap:40px}}
+  .about-lead{margin-top:20px;font-size:16.5px;color:var(--muted);max-width:30em}
+  .about-lead b{color:var(--ink)}
+  .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:640px){.fgrid{grid-template-columns:1fr}}
+  .fcard{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px 24px 26px;font-size:15px;color:var(--ink);font-weight:500;line-height:1.5}
+  .fcard.hot{background:var(--accent);border-color:var(--accent);font-weight:700}
+  .fcard .mark{display:block;width:26px;height:26px;border-radius:8px;background:var(--deep);color:var(--accent);font-size:14px;font-weight:900;display:grid;place-items:center;margin-bottom:16px}
+  .fcard.hot .mark{background:var(--deep)}
+
+  /* ===== Bottom ===== */
+  .bottom{background:var(--deep);color:#fff;padding:104px 0;text-align:center;position:relative;overflow:hidden}
+  @media (max-width:960px){.bottom{padding:72px 0}}
+  .bottom-deco{position:absolute;left:-40px;bottom:-90px;font-family:var(--font-d);font-size:280px;font-weight:900;line-height:1;color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.05);user-select:none;pointer-events:none}
+  .bottom h3{font-family:var(--font-d);font-size:clamp(26px,3.6vw,50px);font-weight:900;line-height:1.12;letter-spacing:-.01em;text-wrap:balance;position:relative}
+  .bottom h3 .yl{color:var(--accent)}
+  .bottom .sub{color:var(--muted-inv);margin:20px auto 36px;max-width:36em;font-size:16.5px;position:relative}
+  .fine{font-size:13px;color:#7e8795;margin-top:28px;position:relative}
+
+  footer{background:var(--deeper);padding:26px 0}
+  .foot-in{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:#7e8795}
+  .foot-in a{color:#c9cfd8;text-decoration:none}
+  .foot-in a:hover{color:var(--accent)}
+</style>
+
+<header>
+  <div class="wrap head-in">
+    <a class="logo" href="https://app.marketorro.ru/s/bETFW0Obfr"><span class="logo-m">M</span>Маркеторро</a>
+    <div class="head-right">
+      <span class="head-tag">Партнёрская акция</span>
+      <a class="head-cta" href="https://app.marketorro.ru/s/bETFW0Obfr">Забрать бонус</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-deco" aria-hidden="true">×2</div>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Маркеторро: сервис маркировки рекламы</div>
+      <h1>Маркируй рекламу на автомате и забери <span class="hl">двойной бонус</span></h1>
+      <p class="lead">Маркеторро сам передаёт креативы в ОРД, получает erid и сдаёт отчёты в ЕРИР. Ни возни, ни риска штрафа до 500 тысяч за пост. А это партнёрская страница, поэтому к любому тарифу здесь идёт <b>бонус на выбор</b>.</p>
+      <div class="hero-cta">
+        <a class="cta-btn" href="https://app.marketorro.ru/s/bETFW0Obfr">Забрать бонус</a>
+        <span class="promo-hint">Промокод подставится автоматически, вводить ничего не нужно</span>
+      </div>
+    </div>
+    <div class="coupons">
+      <div class="offer">
+        <div class="offer-stub" aria-hidden="true">
+          <span class="val">×2</span>
+          <span class="unit">к тарифу</span>
+        </div>
+        <div class="offer-body">
+          <span class="offer-kicker">Вариант 1</span>
+          <h2>Двойные лимиты</h2>
+          <p>Оплачиваешь любой тариф, а лимиты удваиваются: в два раза больше креативов, постов и площадок за те же деньги.</p>
+          <p class="offer-code">Промокод при оплате: <code>X2BONUS</code></p>
+        </div>
+      </div>
+      <div class="offer">
+        <div class="offer-stub" aria-hidden="true">
+          <span class="val">+1</span>
+          <span class="unit">месяц</span>
+        </div>
+        <div class="offer-body">
+          <span class="offer-kicker">Вариант 2</span>
+          <h2>Второй месяц в подарок</h2>
+          <p>Оплачиваешь месяц, второй получаешь бесплатно. Два месяца маркировки и автопостинга по цене одного.</p>
+          <p class="offer-code">Промокод при оплате: <code>PLUSMONTH</code></p>
+        </div>
+      </div>
+      <p class="offers-note">Какой бонус взять, решаешь при оплате: просто введи нужный промокод. <b>Размещаешь много: бери двойные лимиты. Постишь понемногу: выгоднее второй месяц.</b> Совместить нельзя, только один из двух.</p>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <div class="mq-set">
+      <span>Маркировка на автомате</span><span>×2 к тарифу</span><span>Месяц в подарок</span><span>ОРД</span><span>erid</span><span>ЕРИР</span><span>Автопостинг VK · TG · MAX</span>
+    </div>
+    <div class="mq-set">
+      <span>Маркировка на автомате</span><span>×2 к тарифу</span><span>Месяц в подарок</span><span>ОРД</span><span>erid</span><span>ЕРИР</span><span>Автопостинг VK · TG · MAX</span>
+    </div>
+  </div>
+</div>
+
+<section class="steps">
+  <div class="wrap steps-grid">
+    <div class="steps-intro">
+      <h3 class="sec-title">Как получить бонус</h3>
+      <p>Три шага, пара минут времени.</p>
+    </div>
+    <div class="step">
+      <span class="step-num" aria-hidden="true">1</span>
+      <p><b>Перейди по кнопке</b> и зарегистрируйся. Партнёрский промокод привяжется к аккаунту сам, вводить его не нужно.</p>
+    </div>
+    <div class="step">
+      <span class="step-num" aria-hidden="true">2</span>
+      <p><b>Оплати любой тариф</b> в панели, бонус действует даже на минимальный. При оплате введи промокод: <b>X2BONUS</b> для двойных лимитов или <b>PLUSMONTH</b> для второго месяца.</p>
+    </div>
+    <div class="step">
+      <span class="step-num" aria-hidden="true">3</span>
+      <p><b>Готово, бонус включится сам</b> сразу после оплаты. Никаких заявок и ожидания, всё автоматически.</p>
+    </div>
+  </div>
+</section>
+
+<section class="about">
+  <div class="wrap about-grid">
+    <div>
+      <h3 class="sec-title">Что такое Маркеторро</h3>
+      <p class="about-lead">Ты добавляешь креатив, Маркеторро делает остальное: регистрирует его в ОРД, получает erid, публикует пост с маркировкой и сдаёт отчёты в ЕРИР. Штрафы за рекламу без маркировки уже выписывают: юрлицу <b>до 500 тысяч рублей за каждый креатив</b>. Дешевле автоматизировать, чем спорить с проверяющими.</p>
+    </div>
+    <div class="fgrid">
+      <div class="fcard hot"><span class="mark">✓</span>erid за пару минут: загрузил креатив, получил токен</div>
+      <div class="fcard"><span class="mark">✓</span>Отчёты в ЕРИР уходят сами: акты и статистика без ручной сдачи</div>
+      <div class="fcard"><span class="mark">✓</span>Автопостинг с маркировкой во ВКонтакте, Telegram и MAX</div>
+      <div class="fcard"><span class="mark">✓</span>Договоры и контрагенты в одном кабинете, ничего не теряется</div>
+    </div>
+  </div>
+</section>
+
+<section class="bottom">
+  <div class="bottom-deco" aria-hidden="true">+1</div>
+  <div class="wrap">
+    <h3>Двойные лимиты или месяц в подарок.<br><span class="yl">Решать тебе</span></h3>
+    <p class="sub">Бонус работает только при регистрации через эту страницу. Зарегистрируешься с обычного сайта: получишь стандартные условия, без ×2 и без подарочного месяца.</p>
+    <a class="cta-btn" href="https://app.marketorro.ru/s/bETFW0Obfr">Зарегистрироваться с бонусом</a>
+    <p class="fine">Бонус включается промокодом при оплате, действует на один оплаченный период, один промокод на аккаунт один раз. С другими акциями не суммируется.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <span>Маркеторро, сервис маркировки рекламы</span>
+    <a href="https://app.marketorro.ru/s/bETFW0Obfr">marketorro.ru</a>
+  </div>
+</footer>
+</body>
+</html>

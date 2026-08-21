@@ -1,0 +1,29 @@
+{
+  "joomla_version": "6.1.2",
+  "table_prefix": "a0h8n_",
+  "dump": "E:/PROJECTS/CMS DG/legacy_source/goncharoff.pro.sql",
+  "joomla_root": "E:/PROJECTS/CMS DG/legacy_source/joomla",
+  "articles": 176,
+  "trashed_articles_skipped": 0,
+  "article_states": {
+    "1": 175,
+    "0": 1
+  },
+  "content_categories": 11,
+  "used_authors": 1,
+  "tags": 0,
+  "custom_fields": {},
+  "menu_items": 16,
+  "redirects": 313,
+  "sitemap_urls": 171,
+  "media": {
+    "archive_images": 2343,
+    "archive_image_bytes": 143688449,
+    "referenced_files": 858,
+    "unique_images": 858,
+    "existing": 842,
+    "missing": 16,
+    "external": 0,
+    "source_bytes": 61205207
+  }
+}

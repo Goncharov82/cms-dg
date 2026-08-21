@@ -1,0 +1,21 @@
+<div class="component-update-row">
+  <div class="component-logo"><%= logo %></div>
+  <div class="component-details">
+    <div class="component-title-row"><h3><%= name %></h3>
+      <% if release[:error].present? %><span class="update-status is-unknown">Статус неизвестен</span>
+      <% elsif release[:current] %><span class="update-status is-current">Актуальная версия</span>
+      <% else %><span class="update-status is-available">Доступно обновление</span><% end %>
+    </div>
+    <dl class="version-list">
+      <div><dt>Установлено</dt><dd>v<%= release[:installed_version] %></dd></div>
+      <div><dt>Последний релиз</dt><dd><%= release[:latest_version].present? ? "v#{release[:latest_version]}" : "—" %></dd></div>
+      <div><dt>Источник</dt><dd><%= link_to source_label, release[:release_url], target: "_blank", rel: "noopener" %></dd></div>
+    </dl>
+    <% if release[:error].present? %><p class="update-message is-error"><%= release[:error] %></p><% end %>
+    <p class="update-note">Автоматическая проверка выполняется один раз в неделю. Компонент установлен локально и работает независимо от сервера обновлений.</p>
+  </div>
+  <div class="update-actions">
+    <%= button_to "Проверить обновление", admin_settings_check_updates_path, method: :post, params: { component: component }, class: "admin-button" %>
+    <small>Проверено: <%= l(release[:checked_at], format: "%d.%m.%Y, %H:%M") %></small>
+  </div>
+</div>

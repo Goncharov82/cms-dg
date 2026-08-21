@@ -17,5 +17,7 @@
 /app/assets/builds/*
 !/app/assets/builds/.keep
 /public/assets
+/node_modules
 /.kamal/secrets
-
+# Старый Joomla-сайт для миграции
+/legacy_source/

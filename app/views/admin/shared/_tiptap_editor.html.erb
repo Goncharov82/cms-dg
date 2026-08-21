@@ -1,0 +1,23 @@
+<div class="form-field tiptap-editor <%= local_assigns[:compact] ? "is-compact" : "" %> <%= local_assigns[:resizable] ? "is-resizable" : "" %>" data-controller="tiptap-editor">
+  <div class="rich-editor-heading">
+    <%= form.label field, label %>
+    <div class="rich-editor-modes" role="group" aria-label="Режим редактора Tiptap">
+      <button type="button" class="is-active" data-tiptap-editor-target="visualButton" data-action="tiptap-editor#showVisual">Редактор</button>
+      <button type="button" data-tiptap-editor-target="htmlButton" data-action="tiptap-editor#showHtml">HTML</button>
+    </div>
+  </div>
+  <div class="editor-toolbar tiptap-toolbar" data-tiptap-editor-target="toolbar">
+    <% [["paragraph", "Абзац", "Обычный текст"], ["heading2", "H2", "Заголовок H2"], ["heading3", "H3", "Заголовок H3"], ["bold", "B", "Полужирный"], ["italic", "I", "Курсив"], ["underline", "U", "Подчёркивание"], ["bulletList", "•", "Маркированный список"], ["orderedList", "1.", "Нумерованный список"], ["blockquote", "❝", "Цитата"]].each do |command, text, title| %>
+      <button type="button" title="<%= title %>" data-tiptap-editor-target="command" data-action="tiptap-editor#command" data-command="<%= command %>"><%= text %></button>
+    <% end %>
+    <button type="button" title="Добавить или изменить ссылку" data-action="tiptap-editor#addLink">Ссылка</button>
+    <span class="toolbar-divider"></span>
+    <% [["undo", "↶", "Отменить"], ["redo", "↷", "Повторить"], ["clear", "×", "Очистить форматирование"]].each do |command, text, title| %>
+      <button type="button" title="<%= title %>" data-action="tiptap-editor#command" data-command="<%= command %>"><%= text %></button>
+    <% end %>
+  </div>
+  <div class="tiptap-editor-surface" data-tiptap-editor-target="editor"></div>
+  <%= form.text_area field, class: "form-textarea tiptap-source", placeholder: local_assigns[:placeholder] || "Введите текст…", hidden: true, data: { tiptap_editor_target: "source" } %>
+  <div class="code-mirror-host tiptap-code-mirror-host" hidden data-tiptap-editor-target="codeEditor"></div>
+  <p class="form-hint tiptap-version-hint">Tiptap <%= TiptapReleaseChecker::INSTALLED_VERSION %> · HTML: CodeMirror <%= CodeMirrorReleaseChecker::INSTALLED_VERSION %></p>
+</div>

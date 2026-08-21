@@ -1,0 +1,51 @@
+<% content_for :title, @category.rendered_seo_title.presence || @category.rendered_name %>
+<% content_for :meta_description, @category.rendered_meta_description if @category.rendered_meta_description.present? %>
+<div class="public-home public-category">
+  <%= render "shared/public_header" %>
+  <main class="public-container public-category__main">
+    <div class="public-category__layout">
+      <div class="public-category__content">
+        <%= render "shared/public_slider", compact: true %>
+
+        <nav class="public-breadcrumbs" aria-label="Хлебные крошки">
+          <%= link_to "Главная", root_path %><span aria-hidden="true">/</span><strong><%= @category.rendered_name %></strong>
+        </nav>
+
+        <% if @category.rendered_description.present? %><div class="public-category__description"><%= sanitize @category.rendered_description %></div><% end %>
+
+        <section class="public-category__articles" aria-label="Статьи категории <%= @category.rendered_name %>">
+          <% @articles.each do |article| %>
+            <% card_image = public_article_card_image(article) %>
+            <article class="public-card">
+              <%= link_to article.public_path, class: "public-card__image-link", aria: { label: article.rendered_title } do %>
+                <% if card_image %>
+                  <%= image_tag card_image.public_path, alt: article.preview_image_alt.presence || card_image.alt_text.to_s, class: "public-card__image", loading: "lazy" %>
+                <% else %>
+                  <span class="public-card__placeholder"><b>GONCHAROFF<span>.PRO</span></b></span>
+                <% end %>
+              <% end %>
+              <div class="public-card__body">
+                <h2><%= link_to article.rendered_title, article.public_path %></h2>
+                <div class="public-card__meta"><span><%= @category.rendered_name %></span><span aria-hidden="true">•</span><time datetime="<%= article.published_at&.to_date %>"><%= article.published_at&.strftime("%d.%m.%Y") %></time><span aria-hidden="true">•</span><span><%= article.views_count %> просмотров</span></div>
+              </div>
+            </article>
+          <% end %>
+        </section>
+
+        <% if @articles.empty? %><p class="public-category__empty">В этой категории пока нет опубликованных материалов.</p><% end %>
+
+        <% if @total_pages > 1 %>
+          <nav class="public-pagination" aria-label="Страницы категории">
+            <% if @current_page > 1 %><%= link_to "←", @category.public_path + "?page=#{@current_page - 1}", aria: { label: "Предыдущая страница" } %><% end %>
+            <% (1..@total_pages).each do |page| %>
+              <%= link_to page, @category.public_path + (page == 1 ? "" : "?page=#{page}"), class: ("is-active" if page == @current_page), aria: ({ current: "page" } if page == @current_page) %>
+            <% end %>
+            <% if @current_page < @total_pages %><%= link_to "→", @category.public_path + "?page=#{@current_page + 1}", aria: { label: "Следующая страница" } %><% end %>
+          </nav>
+        <% end %>
+      </div>
+
+      <%= render "shared/public_sidebar" %>
+    </div>
+  </main>
+</div>

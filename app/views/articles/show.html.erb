@@ -1,0 +1,41 @@
+<% content_for :title, @article.rendered_seo_title.presence || @article.rendered_title %>
+<% content_for :meta_description, @article.rendered_meta_description if @article.rendered_meta_description.present? %>
+
+<div class="public-home public-article-page">
+  <%= render "shared/public_header" %>
+  <main class="public-container public-article-page__main">
+    <div class="public-article-page__layout">
+      <article class="public-article">
+        <nav class="public-breadcrumbs" aria-label="Хлебные крошки">
+          <%= link_to "Главная", root_path %>
+          <% if @article.category %><span aria-hidden="true">/</span><%= link_to @article.category.rendered_name, @article.category.public_path %><% end %>
+          <span aria-hidden="true">/</span><strong><%= @article.rendered_title %></strong>
+        </nav>
+        <% if @article.main_image&.file&.attached? %><%= image_tag @article.main_image.public_path, class: "public-article-main-image", alt: @article.main_image_alt.presence || @article.main_image.alt_text %><% end %>
+        <div class="public-article__content">
+          <header class="public-article-header">
+            <div class="public-article-meta">
+              <% if @article.category %><%= link_to @article.category.public_path, class: "public-article-meta__item" do %><%= admin_icon(:folder) %><span><%= @article.category.rendered_name %></span><% end %><% end %>
+              <span class="public-article-meta__item"><%= admin_icon(:calendar) %><span><%= (@article.published_at || @article.created_at).strftime("%d.%m.%Y") %></span></span>
+              <span class="public-article-meta__item"><%= admin_icon(:eye) %><span><%= number_with_delimiter(@article.views_count, delimiter: " ") %></span></span>
+            </div>
+            <h1><%= @article.rendered_title %></h1>
+            <% if @article.author %>
+              <div class="public-article-author">
+                <% if @article.author.avatar.attached? %>
+                  <%= image_tag author_avatar_path(@article.author), class: "public-article-author__avatar", alt: @article.author.name %>
+                <% else %>
+                  <span class="public-article-author__avatar public-article-author__fallback" aria-hidden="true"><%= @article.author.name.first %></span>
+                <% end %>
+                <strong><%= @article.author.name %></strong>
+              </div>
+            <% end %>
+          </header>
+          <% if @article.excerpt.present? %><div class="public-article-excerpt"><%= sanitize @article.rendered_excerpt, tags: Rails::Html::SafeListSanitizer.allowed_tags + %w[img table thead tbody tr th td], attributes: Rails::Html::SafeListSanitizer.allowed_attributes + %w[src srcset data-src data-srcset alt width height loading] %></div><% end %>
+          <div class="public-article-body"><%= sanitize @article.rendered_body, tags: Rails::Html::SafeListSanitizer.allowed_tags + %w[img picture source figure figcaption iframe table thead tbody tfoot tr th td], attributes: Rails::Html::SafeListSanitizer.allowed_attributes + %w[src srcset data-src data-srcset alt width height colspan rowspan class style loading target rel] %></div>
+        </div>
+      </article>
+      <%= render "shared/public_sidebar" %>
+    </div>
+  </main>
+</div>

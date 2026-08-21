@@ -1,0 +1,10 @@
+<div class="editor-actions <%= "has-preview" if local_assigns[:preview_path].present? %>">
+  <% if local_assigns[:preview_path].present? %>
+    <%= link_to preview_path, class: "admin-button is-neutral editor-preview-button", target: "_blank", rel: "noopener" do %>
+      <span>Просмотр</span><%= admin_icon(:external) %>
+    <% end %>
+  <% end %>
+  <%= link_to "Отмена", cancel_path, class: "admin-button is-neutral" %>
+  <button type="submit" name="submit_action" value="draft" class="admin-button is-outline">Сохранить черновик</button>
+  <button type="submit" name="submit_action" value="<%= local_assigns.fetch(:primary_value, "published") %>" class="admin-button is-primary"><%= local_assigns.fetch(:primary_label, "Опубликовать") %></button>
+</div>

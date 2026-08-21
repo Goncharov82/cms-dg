@@ -1,12 +1,12 @@
 <% active = local_assigns[:path] && (current_page?(path) || (path != admin_root_path && request.path.start_with?(path))) %>
 <% if local_assigns[:path] %>
-  <%= link_to path, class: "sidebar-link #{active ? "is-active" : ""}" do %>
+  <%= link_to path, class: "sidebar-link #{active ? "is-active" : ""}", title: label do %>
     <%= admin_icon(icon, class_name: "sidebar-icon") %>
     <span><%= label %></span>
     <% if local_assigns[:expandable] %><%= admin_icon(:chevron_down, class_name: "sidebar-chevron") %><% end %>
   <% end %>
 <% else %>
-  <span class="sidebar-link is-disabled" aria-disabled="true">
+  <span class="sidebar-link is-disabled" aria-disabled="true" title="<%= label %>">
     <%= admin_icon(icon, class_name: "sidebar-icon") %>
     <span><%= label %></span>
   </span>

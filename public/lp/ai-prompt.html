@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Каталог промптов для ведения и монетизации блога</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800;900&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0a09;
+  --bg-card:#1a1614;
+  --accent:#ff9000;
+  --accent-dim:#332000;
+  --text:#f5f0ec;
+  --text-dim:#a89e96;
+  --text-muted:#6b625a;
+  --border:#2a2420;
+  --border-light:#3a332c;
+  --radius:16px;
+  --font-display:'Unbounded',sans-serif;
+  --font-body:'Onest',sans-serif;
+  --sidebar-w:300px;
+  --content-max:1160px;
+}
+
+video::-webkit-media-controls-fullscreen-button {
+  display: none !important;
+}
+
+video:hover {
+    cursor: pointer;
+}
+
+/* Фикс скрола на мобильном */
+
+@media (max-width: 767px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  .reviews-wrap {
+    overflow: hidden;
+  }
+}
+
+
+
+
+
+html{scroll-behavior:smooth;background:var(--bg);color:var(--text);font-family:var(--font-body)}
+body{overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");background-repeat:repeat;background-size:128px 128px;opacity:.5}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(255,144,0,.08) 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:var(--content-max);width:100%;margin:0 auto}
+.hero-badge{display:inline-block;background:var(--accent-dim);color:var(--accent);font-size:.75rem;font-weight:600;padding:8px 20px;border-radius:100px;text-transform:uppercase;letter-spacing:.15em;margin-bottom:40px;animation:fadeUp .8s ease both}
+.hero h1{font-family:var(--font-display);font-weight:900;font-size:clamp(1.9rem,4.8vw,3.6rem);line-height:1.05;text-transform:uppercase;margin-bottom:48px;animation:fadeUp .8s .1s ease both}
+.hero h1 em{color:var(--accent);font-style:normal}
+.hero-video{position:relative;width:100%;max-width:800px;margin:0 auto 40px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border-light);box-shadow:0 40px 80px rgba(0,0,0,.5);animation:fadeUp .8s .2s ease both}
+.hero-video video{width:100%;display:block;background:#000}
+.hero-sub{font-size:clamp(1.05rem,2vw,1.3rem);font-weight:600;color:var(--text);margin-bottom:8px;animation:fadeUp .8s .3s ease both}
+.hero-sub-small{font-size:.95rem;color:var(--text-muted);max-width:520px;margin:0 auto;animation:fadeUp .8s .35s ease both}
+.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:32px;animation:fadeUp .8s .4s ease both}
+.hero-tags span{background:var(--bg-card);border:1px solid var(--border);font-size:.85rem;padding:8px 18px;border-radius:100px;color:var(--text-dim);transition:border-color .3s,color .3s}
+.hero-tags span:hover{border-color:var(--accent);color:var(--accent)}
+.hero-cta-wrap{margin-top:44px;animation:fadeUp .8s .45s ease both}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:var(--bg);font-family:var(--font-body);font-weight:700;font-size:1rem;padding:18px 40px;border-radius:100px;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:transform .25s,box-shadow .25s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,144,0,.35)}
+.btn-primary svg{width:18px;height:18px}
+
+.grid-zone{max-width:var(--content-max);margin:0 auto;display:grid;grid-template-columns:1fr var(--sidebar-w);gap:48px;padding:0 24px;align-items:start}
+.grid-zone .main-col{min-width:0}
+
+.sidebar{position:sticky;top:32px;align-self:start}
+.sidebar-card{background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius);padding:32px 28px;text-align:center}
+.sidebar-price{font-family:var(--font-display);font-weight:900;font-size:2.4rem;color:var(--accent);margin-bottom:4px}
+.sidebar-old{color:var(--text-muted);font-size:.9rem;text-decoration:line-through;margin-bottom:12px}
+.sidebar-note{color:var(--text-dim);font-size:.75rem;margin-bottom:16px}
+.timer-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:16px}
+.timer-icon{width:18px;height:18px;flex-shrink:0}
+.timer-text{font-family:var(--font-display);font-weight:700;font-size:1.1rem;color:var(--accent);letter-spacing:.04em}
+.sidebar-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--accent);color:var(--bg);font-family:var(--font-body);font-weight:700;font-size:.95rem;padding:16px 24px;border-radius:100px;border:none;cursor:pointer;transition:transform .25s,box-shadow .25s;margin-bottom:8px}
+.sidebar-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,144,0,.3)}
+.sidebar-pay-note{color:var(--text-muted);font-size:.72rem;margin-bottom:20px}
+.sidebar-features{list-style:none;text-align:left}
+.sidebar-features li{padding:8px 0;color:var(--text-dim);font-size:.85rem;display:flex;align-items:flex-start;gap:8px;line-height:1.45}
+.sidebar-features li::before{content:'✓';color:var(--accent);font-weight:700;font-size:.8rem;flex-shrink:0;margin-top:1px}
+
+.fullwidth-section{max-width:var(--content-max);margin:0 auto;padding:0 24px}
+.section{padding:80px 0}.section:first-child{padding-top:40px}
+.section-label{font-family:var(--font-display);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;color:var(--accent);margin-bottom:16px}
+.section-title{font-family:var(--font-display);font-weight:800;font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.15;margin-bottom:16px}
+.section-desc{color:var(--text-dim);font-size:1rem;max-width:600px;line-height:1.65;margin-bottom:40px}
+
+.pain-grid{display:grid;grid-template-columns:1fr;gap:16px}
+.pain-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;transition:border-color .3s}
+.pain-card:hover{border-color:var(--accent)}
+.pain-icon{font-size:1.4rem;margin-bottom:12px}
+.pain-card h3{font-family:var(--font-display);font-weight:700;font-size:.95rem;margin-bottom:8px}
+.pain-card p{color:var(--text-dim);font-size:.88rem;line-height:1.6}
+
+.inside-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.inside-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;position:relative;overflow:hidden;transition:border-color .3s}
+.inside-item:hover{border-color:var(--accent)}
+.inside-num{font-family:var(--font-display);font-weight:900;font-size:2.2rem;color:var(--accent);opacity:.12;position:absolute;top:10px;right:16px}
+.inside-item h3{font-family:var(--font-display);font-weight:700;font-size:.85rem;margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em}
+.inside-item p{color:var(--text-dim);font-size:.82rem;line-height:1.55}
+
+.steps{display:flex;flex-direction:column;position:relative;padding-left:40px}
+.steps::before{content:'';position:absolute;left:15px;top:8px;bottom:8px;width:2px;background:var(--border)}
+.step{position:relative;padding:24px 0}
+.step-dot{position:absolute;left:-40px;top:28px;width:32px;height:32px;border-radius:50%;background:var(--accent-dim);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:.75rem;color:var(--accent)}
+.step h3{font-family:var(--font-display);font-weight:700;font-size:1rem;margin-bottom:6px}
+.step p{color:var(--text-dim);font-size:.88rem;line-height:1.6}
+
+.who-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.who-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;transition:border-color .3s}
+.who-card:hover{border-color:var(--accent)}
+.who-emoji{font-size:1.8rem;margin-bottom:10px}
+.who-card h3{font-family:var(--font-display);font-weight:700;font-size:.85rem;margin-bottom:4px}
+.who-card p{color:var(--text-dim);font-size:.82rem;line-height:1.5}
+
+/* ── reviews slider ── */
+.reviews-wrap{position:relative}
+.reviews-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:4px 0 16px;scrollbar-width:none;scroll-behavior:smooth}
+.reviews-track::-webkit-scrollbar{display:none}
+.review-card{flex:0 0 calc((100% - 40px)/3);scroll-snap-align:start;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.review-head{display:flex;align-items:center;gap:10px}
+.review-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--accent);font-weight:700;flex-shrink:0}
+.review-name{font-weight:700;font-size:.85rem}
+.review-role{color:var(--text-muted);font-size:.7rem}
+.review-text{color:var(--text-dim);font-size:.82rem;line-height:1.55}
+.review-stars{color:var(--accent);font-size:.8rem;letter-spacing:2px}
+.slider-arrow{position:absolute;top:50%;transform:translateY(-70%);width:40px;height:40px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border-light);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .3s,background .3s;z-index:2}
+.slider-arrow:hover{border-color:var(--accent);background:var(--accent-dim)}
+.slider-arrow svg{width:18px;height:18px}
+.slider-arrow.left{left:-20px}
+.slider-arrow.right{right:-20px}
+.reviews-dots{display:flex;justify-content:center;gap:6px;margin-top:8px;flex-wrap:wrap}
+.reviews-dots button{width:8px;height:8px;border-radius:50%;border:none;background:var(--border-light);cursor:pointer;transition:background .3s,width .3s,border-radius .3s;padding:0}
+.reviews-dots button.active{background:var(--accent);width:20px;border-radius:4px}
+
+/* ── pricing ── */
+.pricing-layout{display:grid;grid-template-columns:var(--sidebar-w) 1fr;gap:48px;align-items:start}
+.pricing-left .sidebar-card{text-align:center}
+.pricing-right{padding-top:8px}
+.bonus-title{font-family:var(--font-display);font-weight:800;font-size:1.1rem;margin-bottom:20px;color:var(--accent)}
+.bonus-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:12px;transition:border-color .3s}
+.bonus-item:hover{border-color:var(--accent)}
+.bonus-item h4{font-family:var(--font-display);font-weight:700;font-size:.85rem;margin-bottom:4px}
+.bonus-item p{color:var(--text-dim);font-size:.82rem;line-height:1.5}
+.bonus-tag{display:inline-block;background:var(--accent-dim);color:var(--accent);font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+
+.faq-list{display:flex;flex-direction:column}
+.faq-item{border-bottom:1px solid var(--border);overflow:hidden}
+.faq-q{width:100%;background:none;border:none;color:var(--text);font-family:var(--font-body);font-weight:600;font-size:.95rem;text-align:left;padding:20px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;transition:color .2s}
+.faq-q:hover{color:var(--accent)}
+.faq-q svg{flex-shrink:0;width:18px;height:18px;transition:transform .3s;color:var(--text-muted)}
+.faq-item.open .faq-q svg{transform:rotate(45deg);color:var(--accent)}
+.faq-a{max-height:0;transition:max-height .35s ease,padding .35s ease;padding:0;color:var(--text-dim);font-size:.88rem;line-height:1.65;overflow:hidden}
+.faq-item.open .faq-a{max-height:400px;padding:0 0 20px}
+
+.footer{text-align:center;padding:40px 24px 30px;border-top:1px solid var(--border);color:var(--text-muted);font-size:.75rem;margin-top:40px;line-height:1.7}
+.footer-legal{margin-bottom:6px}
+
+.mobile-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--bg-card);border-top:1px solid var(--border-light);padding:12px 16px;backdrop-filter:blur(20px);transform:translateY(100%);transition:transform .35s ease}
+.mobile-bar.show{transform:translateY(0)}
+.mobile-bar-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:600px;margin:0 auto}
+.mobile-bar-left{display:flex;flex-direction:column;gap:2px}
+.mobile-bar-price{font-family:var(--font-display);font-weight:900;font-size:1.2rem;color:var(--accent)}
+.mobile-bar-timer{display:flex;align-items:center;gap:4px}
+.mobile-bar-timer .timer-icon{width:13px;height:13px}
+.mobile-bar-timer .timer-text{font-size:.7rem}
+.mobile-bar .sidebar-btn{margin-bottom:0;width:auto;padding:14px 24px;font-size:.85rem}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@media(max-width:900px){
+  .grid-zone{grid-template-columns:1fr;gap:0;padding:0 16px}
+  .sidebar{display:none}
+  .mobile-bar{display:block}
+  .hero{padding:60px 16px}
+  .section{padding:56px 0}
+  .fullwidth-section{padding:0 16px}
+  .pricing-layout{grid-template-columns:1fr;gap:32px}
+  .review-card{flex:0 0 85vw}
+  .slider-arrow{display:none}
+  body{padding-bottom:72px}
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">50+ профессиональных промптов</div>
+    <h1>Каталог промптов<br>для ведения и <em>монетизации блога</em></h1>
+    <div class="hero-video" id="heroVideo">
+      <video id="heroVideoPlayer" controls  playsinline preload="metadata" poster="./cover.jpg">
+        <source src="./offer.mp4" type="video/mp4">
+      </video>
+    </div>
+    <p class="hero-sub">Контент делается в разы быстрее. Заявок и продаж становится больше.</p>
+    <p class="hero-sub-small">Готовые инструменты вместо шаблонных промптов из Reels.</p>
+    <div class="hero-tags">
+      <span>📊 Маркетинг</span><span>✍️ Контент</span><span>🎨 Графика</span><span>⚙️ Автоматизация</span>
+    </div>
+    <div class="hero-cta-wrap">
+      <a href="https://t.me/goncharoffinsta_bot?start=marketolog2"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="btn-primary">
+
+    Забрать каталог
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14"/>
+        <path d="m12 5 7 7-7 7"/>
+    </svg>
+</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ZONE 1 ═══ -->
+<div class="grid-zone">
+  <div class="main-col">
+    <div class="section">
+      <div class="section-label">Проблема</div>
+      <h2 class="section-title">Почему «просто спросить у ChatGPT» — не работает</h2>
+      <p class="section-desc">Большинство маркетологов и фрилансеров используют ИИ на 5% его возможностей. Знакомо?</p>
+      <div class="pain-grid">
+        <div class="pain-card"><div class="pain-icon">😴</div><h3>Шаблонный контент</h3><p>Тексты звучат как «написано роботом». Подписчики пролистывают, алгоритмы не продвигают.</p></div>
+        <div class="pain-card"><div class="pain-icon">⏳</div><h3>Часы на генерацию</h3><p>Переписываете промпты 10 раз, а результат всё равно нужно полностью переделывать руками.</p></div>
+        <div class="pain-card"><div class="pain-icon">🎯</div><h3>Нет системы</h3><p>Набор случайных запросов вместо связанной стратегии. Каждый пост — как с нуля.</p></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">Что внутри</div>
+      <h2 class="section-title">Система, а не список промптов</h2>
+      <p class="section-desc">Каждый промпт — это проверенный инструмент с чёткой логикой, контекстом и результатом.</p>
+      <div class="inside-grid">
+        <div class="inside-item"><div class="inside-num">01</div><h3>Клиентская матрица</h3><p>Глубокий анализ аудитории: боли, мотивация, возражения, триггеры — в одном фреймворке.</p></div>
+        <div class="inside-item"><div class="inside-num">02</div><h3>Контент-стратегия</h3><p>Промпты для планирования, рубрик, воронок и контент-календарей на месяцы вперёд.</p></div>
+        <div class="inside-item"><div class="inside-num">03</div><h3>Продающие тексты</h3><p>Посты, сторис, рассылки, лид-магниты — с учётом тона, ниши и этапа воронки.</p></div>
+        <div class="inside-item"><div class="inside-num">04</div><h3>Визуал и графика</h3><p>Промпты для генерации изображений, баннеров, карточек и визуального контента.</p></div>
+        <div class="inside-item"><div class="inside-num">05</div><h3>Автоматизация</h3><p>Шаблоны для автоматической обработки отзывов, FAQ, скриптов продаж.</p></div>
+        <div class="inside-item"><div class="inside-num">06</div><h3>Видео-инструкции</h3><p>Пошаговые видео к каждому разделу: не просто промпт, а как его адаптировать.</p></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">Как это работает</div>
+      <h2 class="section-title">Три шага до результата</h2>
+      <p class="section-desc">Без обучения, без курсов на 40 часов. Открыл, вставил, получил результат.</p>
+      <div class="steps">
+        <div class="step"><div class="step-dot">1</div><h3>Выберите задачу</h3><p>Нужен пост? Стратегия? Анализ аудитории? Находите нужный промпт в каталоге.</p></div>
+        <div class="step"><div class="step-dot">2</div><h3>Подставьте свои данные</h3><p>Заполните поля под свою нишу, продукт и аудиторию. Каждый промпт — с примером.</p></div>
+        <div class="step"><div class="step-dot">3</div><h3>Получите готовый результат</h3><p>Контент, который можно публиковать сразу или адаптировать за 5 минут.</p></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-label">Для кого</div>
+      <h2 class="section-title">Кому это подойдёт</h2>
+      <p class="section-desc">Каталог работает для всех, кто делает контент и хочет делать его быстрее и качественнее.</p>
+      <div class="who-grid">
+        <div class="who-card"><div class="who-emoji">💼</div><h3>Фрилансеры</h3><p>Берите больше проектов, тратьте меньше времени на рутину.</p></div>
+        <div class="who-card"><div class="who-emoji">📱</div><h3>SMM-специалисты</h3><p>Контент-планы, тексты и визуал — в единой системе.</p></div>
+        <div class="who-card"><div class="who-emoji">🚀</div><h3>Предприниматели</h3><p>Маркетинг своими руками без найма агентства.</p></div>
+        <div class="who-card"><div class="who-emoji">🎓</div><h3>Эксперты и наставники</h3><p>Упаковка знаний в продающий контент без копирайтера.</p></div>
+      </div>
+    </div>
+  </div>
+  <aside class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-old">5 000 ₽</div>
+      <div class="sidebar-price">2 500 ₽</div>
+      <div class="sidebar-note">Одноразовый платёж · Навсегда</div>
+      <div class="timer-row"><svg class="timer-icon" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="13" r="9"/><path d="M12 9v4l2.5 1.5"/><path d="M9 2h6"/></svg><span class="timer-text" id="sidebarTimer">03:00:00</span></div>
+      <a href="https://t.me/goncharoffinsta_bot?start=marketolog2"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="sidebar-btn">
+
+    Купить доступ
+</a>
+      <div class="sidebar-pay-note">Доступна оплата из-за рубежа</div>
+      <ul class="sidebar-features">
+        <li>50+ промптов с инструкциями</li>
+        <li>Видео-уроки к каждому разделу</li>
+        <li>Бесплатные обновления</li>
+        <li>Доступ в закрытый Telegram-чат</li>
+      </ul>
+    </div>
+  </aside>
+</div>
+
+<!-- ═══ REVIEWS ═══ -->
+<div class="fullwidth-section">
+  <div class="section">
+    <div class="section-label">Отзывы</div>
+    <h2 class="section-title">Что говорят те, кто уже купил</h2>
+    <div class="reviews-wrap">
+      <button class="slider-arrow left" id="sliderLeft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <button class="slider-arrow right" id="sliderRight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></button>
+      <div class="reviews-track" id="reviewsTrack">
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">А</div><div><div class="review-name">Анна</div><div class="review-role">психолог, блог в Telegram</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Ребят, ну я реально в шоке. Скептически относилась ко всяким «волшебным промптам», типа ну ок, очередной инфопродукт. Но тут прям… за вечер написала контент-план на месяц. НА МЕСЯЦ. Раньше неделю тянула. Окупилось за один вечер, без преувеличений.</div></div>
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">Д</div><div><div class="review-name">Дима К.</div><div class="review-role">фрилансер, лендинги</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">У меня основная боль была — тексты для клиентских сайтов. Я не копирайтер вообще, мне это прям тяжело давалось. Ткнул в «продающие тексты», подставил нишу клиента — и блин, оно нормальное. Не идеальное, но 80% работы сделано. Кайф, реально кайф.</div></div>
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">М</div><div><div class="review-name">Марина</div><div class="review-role">SMM-менеджер</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Я ChatGPT юзала и раньше, но как-то… ну вот пишешь ему «напиши пост», а он выдаёт такую фигню. А тут промпты продуманные, с контекстом, с ролями. Разница как небо и земля. Клиентка заметила, говорит «у тебя тексты стали другие». Приятно, чё.</div></div>
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">С</div><div><div class="review-name">Сергей</div><div class="review-role">владелец кофейни</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Я вообще далёк от маркетинга, если честно. Инстаграм веду кое-как. Купил из любопытства. Впервые сам написал серию сторис, которые принесли бронирования. Без агентства, без СММщика. Просто с телефона и промптами. Не ожидал такого эффекта.</div></div>
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">К</div><div><div class="review-name">Катя</div><div class="review-role">стилист, Instagram</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Мне больше всего зашла клиентская матрица. Думала, знаю свою аудиторию — типа «девушки 25-35, хотят хорошо одеваться». Прогнала через промпт — вылезло столько инсайтов. Переписала все офферы, конверсия прям выросла. По цифрам вижу, не на глазок.</div></div>
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">И</div><div><div class="review-name">Игорь</div><div class="review-role">маркетолог, агентство</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Я такие штуки обычно не покупаю, сам в теме. Но коллега скинул, глянул — некоторые промпты прям сэкономят часы. Особенно по автоматизации. Внедрили в воркфлоу команды, ребята на 30% быстрее закрывают задачи по контенту. Рекомендую серьёзно.</div></div>
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">О</div><div><div class="review-name">Олеся</div><div class="review-role">нутрициолог, курсы</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Короче, я полгода мучилась с контентом. Реально сидела, тупила в экран, ничего не шло. А тут буквально села, открыла промпт по рубрикам, вбила свою тему — и оно мне выдало такой план, что я два часа потом сидела и записывала рилсы. Два часа! Раньше за неделю один делала.</div></div>
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">В</div><div><div class="review-name">Влад</div><div class="review-role">таргетолог</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Мне для работы нужны были тексты для рекламных креативов. Ну вот эти короткие цепляющие заголовки. ChatGPT обычно генерит какую-то ерунду, а с этими промптами — прям другой уровень. Заказчик спросил, не нанял ли я копирайтера. Нет, говорю, это нейросеть. Он не поверил.</div></div>
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">Н</div><div><div class="review-name">Наташа</div><div class="review-role">репетитор, блог</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Я вообще технически не очень, если честно. Долго боялась всех этих нейросетей. Но тут прям пошагово всё разжёвано, видосы есть. Я даже маме показала, она тоже разобралась. Сейчас веду блог, посты делаю за 15 минут вместо двух часов. Ну и подписчики растут, что тоже приятно.</div></div>
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">Р</div><div><div class="review-name">Руслан</div><div class="review-role">веб-разработчик</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Я программист, мне контент — это боль. Но свой блог вести надо, клиенты оттуда приходят. Купил этот каталог, и знаете… прям помогло. Я не стал копирайтером, но теперь хотя бы не стыдно за свои посты. Плюс автоворонку собрал на промптах — вообще огонь.</div></div>
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">Е</div><div><div class="review-name">Елена</div><div class="review-role">фотограф</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Мне нравится, что это не «курс на 100 часов», а именно инструменты. Открыла, взяла что нужно, получила результат. Вчера за час сделала контент-план, три поста и серию сторис для свадебного сезона. Раньше бы неделю прокрастинировала. Ну вот такая разница.</div></div>
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">А</div><div><div class="review-name">Артём</div><div class="review-role">бизнес-тренер</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Слушайте, я сам обучаю людей, и знаю цену хорошим инструментам. Тут всё по делу, без воды. Промпт по лид-магнитам — это прям бомба. Я за день собрал чеклист, который мне потом 40 подписчиков принёс. За день. Ну камон, это же копейки за такой результат.</div></div>
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">Т</div><div><div class="review-name">Таня</div><div class="review-role">мастер маникюра</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Девочки, кто ведёт инсту салона — вот это реально спасение. Я не знала что писать вообще, вот тупо. Фотки ногтей и всё. А сейчас у меня и советы, и истории клиентов, и розыгрыши — и всё нейросеть помогает писать. Запись выросла, факт.</div></div>
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">П</div><div><div class="review-name">Павел</div><div class="review-role">продюсер онлайн-курсов</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Я покупал кучу всяких промпт-паков, и 90% — мусор. Вот тут первый раз почувствовал что кто-то реально сел и продумал каждый промпт. Особенно по контент-стратегии и воронкам — там прям видно опыт. Мои ребята в команде тоже пользуются, все довольны.</div></div>
+
+        <div class="review-card"><div class="review-head"><div class="review-avatar">Ю</div><div><div class="review-name">Юля</div><div class="review-role">копирайтер-фрилансер</div></div></div><div class="review-stars">★★★★★</div><div class="review-text">Я копирайтер, да, и подумала — зачем мне промпты, я же сама пишу. Ну взяла попробовать. И чё — матрица аудитории мне дала такой разбор клиентов, который я бы сама часа три собирала из брифов. Теперь использую на каждом проекте как стартовую точку. Экономит прям кучу времени.</div></div>
+
+      </div>
+      <div class="reviews-dots" id="reviewsDots"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ZONE 2: Pricing ═══ -->
+<div class="fullwidth-section" id="pricing">
+  <div class="section">
+    <div class="section-label">Доступ</div>
+    <h2 class="section-title">Забрать каталог</h2>
+    <p class="section-desc">Один раз — навсегда. Все обновления включены.</p>
+    <div class="pricing-layout">
+      <div class="pricing-left">
+        <div class="sidebar-card">
+          <div class="sidebar-old">5 000 ₽</div>
+          <div class="sidebar-price">2 500 ₽</div>
+          <div class="sidebar-note">Одноразовый платёж · Навсегда</div>
+          <div class="timer-row"><svg class="timer-icon" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="13" r="9"/><path d="M12 9v4l2.5 1.5"/><path d="M9 2h6"/></svg><span class="timer-text" id="pricingTimer">03:00:00</span></div>
+          <a href="https://t.me/goncharoffinsta_bot?start=marketolog2"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="sidebar-btn">
+
+    Купить доступ
+</a>
+          <div class="sidebar-pay-note">Доступна оплата из-за рубежа</div>
+          <ul class="sidebar-features">
+            <li>50+ промптов с инструкциями</li>
+            <li>Видео-уроки к каждому разделу</li>
+            <li>Бесплатные обновления</li>
+            <li>Доступ в закрытый Telegram-чат</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pricing-right">
+        <div class="bonus-title">🎁 Бонусы при покупке</div>
+        <div class="bonus-item"><div class="bonus-tag">мини-курс 1</div><h4>Нейросети для контента с нуля</h4><p>Как начать работать с ChatGPT, Claude и другими ИИ, даже если вы никогда этого не делали. Настройка, логика запросов, типичные ошибки новичков.</p></div>
+        <div class="bonus-item"><div class="bonus-tag">мини-курс 2</div><h4>Визуал на нейросетях: от идеи до публикации</h4><p>Генерация изображений для соцсетей, обложек и сторис. Промпты для Midjourney и нативных генераторов — без дизайнерских навыков.</p></div>
+        <div class="bonus-item"><div class="bonus-tag">мини-курс 3</div><h4>Автоворонки на промптах</h4><p>Как собрать контентную воронку — от первого касания до продажи — целиком на ИИ. Лид-магнит, серия прогрева, продающий пост.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FAQ ═══ -->
+<div class="fullwidth-section">
+  <div class="section">
+    <div class="section-label">Вопросы</div>
+    <h2 class="section-title">Частые вопросы</h2>
+    <div class="faq-list">
+      <div class="faq-item"><button class="faq-q">Подойдёт ли для моей ниши?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button><div class="faq-a">Промпты универсальны и адаптируются под любую нишу — от услуг и инфопродуктов до e-commerce. В каждом промпте есть поле для ввода вашей специфики.</div></div>
+      <div class="faq-item"><button class="faq-q">С какими ИИ работают промпты?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button><div class="faq-a">ChatGPT, Claude, DeepSeek, Gemini — промпты оптимизированы для работы с любой современной языковой моделью. Работают даже с бесплатными версиями.</div></div>
+      <div class="faq-item"><button class="faq-q">Нужен ли опыт работы с ИИ?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button><div class="faq-a">Нет. К каждому промпту есть видео-инструкция и пример использования. Плюс в бонусах — мини-курс для полных новичков. Справится даже тот, кто впервые открывает ChatGPT.</div></div>
+      <div class="faq-item"><button class="faq-q">Будут ли обновления?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button><div class="faq-a">Да, все обновления каталога бесплатные. Новые промпты и категории добавляются регулярно — вы получаете доступ ко всем будущим версиям без доплат.</div></div>
+      <div class="faq-item"><button class="faq-q">Чем это отличается от бесплатных промптов в интернете?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button><div class="faq-a">Бесплатные промпты — это обычно одна строка типа «напиши пост про X». Здесь каждый промпт — это продуманная система: роль, контекст, формат, примеры, ограничения. Результат принципиально другого качества.</div></div>
+      <div class="faq-item"><button class="faq-q">Я получу доступ сразу после оплаты?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button><div class="faq-a">Да, моментально. После оплаты вы получаете ссылку на каталог, бонусные мини-курсы и приглашение в закрытый Telegram-чат.</div></div>
+      <div class="faq-item"><button class="faq-q">Можно ли оплатить из-за рубежа?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button><div class="faq-a">Да, доступна оплата картами иностранных банков, а также через PayPal и криптовалюту. Подробности — на странице оплаты.</div></div>
+      <div class="faq-item"><button class="faq-q">Есть ли гарантия возврата?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button><div class="faq-a">Да, 7 дней гарантия возврата без вопросов. Если каталог вам не подойдёт — просто напишите в поддержку, вернём деньги.</div></div>
+      <div class="faq-item"><button class="faq-q">Сколько времени нужно на освоение?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button><div class="faq-a">Каталог — это не курс, который нужно проходить целиком. Вы просто открываете нужный промпт и используете его. Первый результат — через 10-15 минут после покупки.</div></div>
+      <div class="faq-item"><button class="faq-q">Можно ли использовать для клиентов?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button><div class="faq-a">Конечно. SMM-специалисты и маркетологи активно используют каталог для работы с клиентскими проектами. Промпты адаптируются под любую нишу и бренд.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE BAR -->
+<div class="mobile-bar" id="mobileBar">
+  <div class="mobile-bar-inner">
+    <div class="mobile-bar-left">
+      <div class="mobile-bar-price">2 500 ₽</div>
+      <div class="mobile-bar-timer"><svg class="timer-icon" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="13" r="9"/><path d="M12 9v4l2.5 1.5"/><path d="M9 2h6"/></svg><span class="timer-text" id="mobileTimer">03:00:00</span></div>
+    </div>
+    <a href="https://t.me/goncharoffinsta_bot?start=marketolog2"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="sidebar-btn">
+
+    Купить доступ
+</a>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-legal">ИП Гончаров Дмитрий Александрович · ИНН: 590522985304</div>
+  <p>© 2026 ИИ-маркетолог · Все права защищены</p>
+</footer>
+
+<script>
+// ── Timer ──
+(function(){
+  const K='countdown_end';
+  let end=sessionStorage.getItem(K);
+  if(!end){end=Date.now()+3*3600000;sessionStorage.setItem(K,end);}else end=+end;
+  const els=[document.getElementById('sidebarTimer'),document.getElementById('pricingTimer'),document.getElementById('mobileTimer')];
+  function tick(){
+    let d=Math.max(0,end-Date.now());
+    const h=String(Math.floor(d/3600000)).padStart(2,'0');
+    const m=String(Math.floor((d%3600000)/60000)).padStart(2,'0');
+    const s=String(Math.floor((d%60000)/1000)).padStart(2,'0');
+    const t=h+':'+m+':'+s;
+    els.forEach(e=>{if(e)e.textContent=t;});
+    if(d>0)requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+// ── FAQ ──
+document.querySelectorAll('.faq-q').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const i=b.parentElement,o=i.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(x=>x.classList.remove('open'));
+    if(!o)i.classList.add('open');
+  });
+});
+
+// ── Mobile bar ──
+const mobileBar=document.getElementById('mobileBar'),hero=document.querySelector('.hero');
+function checkM(){if(window.innerWidth>900)return;mobileBar.classList.toggle('show',hero.getBoundingClientRect().bottom<0);}
+window.addEventListener('scroll',checkM,{passive:true});
+window.addEventListener('resize',checkM,{passive:true});
+
+// ── Fade-in ──
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='none';}});},{threshold:.12});
+document.querySelectorAll('.pain-card,.inside-item,.step,.who-card,.faq-item,.review-card,.bonus-item').forEach(el=>{
+  el.style.opacity='0';el.style.transform='translateY(16px)';el.style.transition='opacity .5s ease,transform .5s ease';obs.observe(el);
+});
+
+// ── Reviews slider ──
+(function(){
+  const track=document.getElementById('reviewsTrack');
+  const cards=track.querySelectorAll('.review-card');
+  const dotsW=document.getElementById('reviewsDots');
+  const total=cards.length;
+  const perPage=window.innerWidth>900?3:1;
+  const pages=Math.ceil(total/perPage);
+  let current=0,autoTimer;
+
+  // dots
+  for(let i=0;i<pages;i++){
+    const b=document.createElement('button');
+    b.setAttribute('aria-label','Страница '+(i+1));
+    if(i===0)b.classList.add('active');
+    b.addEventListener('click',()=>{goTo(i);resetAuto();});
+    dotsW.appendChild(b);
+  }
+  const dots=dotsW.querySelectorAll('button');
+
+  function goTo(p){
+    current=Math.max(0,Math.min(p,pages-1));
+    const cardW=cards[0].offsetWidth+20;
+    track.scrollTo({left:current*perPage*cardW,behavior:'smooth'});
+    dots.forEach((d,i)=>d.classList.toggle('active',i===current));
+  }
+
+  document.getElementById('sliderLeft').addEventListener('click',()=>{goTo(current-1);resetAuto();});
+  document.getElementById('sliderRight').addEventListener('click',()=>{goTo(current+1);resetAuto();});
+
+  function autoScroll(){autoTimer=setInterval(()=>{current=(current+1)%pages;goTo(current);},10000);}
+  function resetAuto(){clearInterval(autoTimer);autoScroll();}
+  autoScroll();
+
+  // sync dots on manual scroll
+  let scrollTimeout;
+  track.addEventListener('scroll',()=>{
+    clearTimeout(scrollTimeout);
+    scrollTimeout=setTimeout(()=>{
+      const scrollLeft=track.scrollLeft;
+      const cardW=cards[0].offsetWidth+20;
+      const idx=Math.round(scrollLeft/(cardW*perPage));
+      if(idx!==current){current=idx;dots.forEach((d,i)=>d.classList.toggle('active',i===current));}
+    },100);
+  },{passive:true});
+})();
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const wrap = document.getElementById("heroVideo");
+  const video = document.getElementById("heroVideoPlayer");
+
+  if (!video || !wrap) return;
+
+  // Убираем кнопку fullscreen
+  const style = document.createElement("style");
+  style.textContent = `
+    .hero-video video::-webkit-media-controls-fullscreen-button {
+      display: none !important;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Полностью режем двойной клик до того, как браузер успеет что-то сделать
+  let lastTap = 0;
+
+  function blockDoubleAction(e) {
+    const now = Date.now();
+    const delta = now - lastTap;
+
+    if (delta > 0 && delta < 350) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation?.();
+      return false;
+    }
+
+    lastTap = now;
+  }
+
+  ["pointerdown", "mousedown", "touchstart"].forEach(function (eventName) {
+    wrap.addEventListener(eventName, blockDoubleAction, true);
+    video.addEventListener(eventName, blockDoubleAction, true);
+  });
+
+  // На всякий случай еще и dblclick режем
+  [wrap, video].forEach(function (el) {
+    el.addEventListener("dblclick", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation?.();
+      return false;
+    }, true);
+  });
+
+  // Если fullscreen все же как-то пролез
+  document.addEventListener("fullscreenchange", function () {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(function () {});
+    }
+  });
+
+  video.addEventListener("webkitbeginfullscreen", function (e) {
+    e.preventDefault();
+  });
+});
+
+
+
+</script>
+</body>
+</html>

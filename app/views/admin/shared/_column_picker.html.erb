@@ -1,0 +1,14 @@
+<details class="columns-picker" data-table-columns-target="picker">
+  <summary class="admin-button filter-columns"><%= admin_icon(:sliders) %><span>Столбцы</span></summary>
+  <div class="columns-picker-menu">
+    <strong>Показывать столбцы</strong>
+    <% columns.each do |key, label, required| %>
+      <label class="columns-picker-option <%= "is-required" if required %>">
+        <input type="checkbox" value="<%= key %>" checked <%= "disabled" if required %> data-table-columns-target="checkbox" data-action="change->table-columns#toggle">
+        <span class="columns-picker-check"><%= admin_icon(:check) %></span>
+        <span><%= label %></span>
+        <% if required %><small>Обязательно</small><% end %>
+      </label>
+    <% end %>
+  </div>
+</details>

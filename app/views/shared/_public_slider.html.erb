@@ -1,0 +1,28 @@
+<section class="home-slider <%= local_assigns[:compact] ? "home-slider--category" : nil %>" data-controller="home-slider" aria-label="Рекомендуемые материалы">
+  <% slides = [
+    { image: "slide-1.webp", url: "/lp/ai-prompt.html?utm_source=goncharoff_pro&utm_medium=internal_slider&utm_campaign=category_slider&utm_content=ai_prompt", eyebrow: "ChatGPT, Claude, Grok", title: "Каталог профессиональных промптов", text: "Создавай контент за минуты", modal: "ad-modal-ai-prompt", erid: "5jtCeReLm1VRAj3rc5TA2Z9" },
+    { image: "slide-2.webp", url: "/ai/kak-poluchit-50-skidku-na-vps-server-timeweb-cloud?utm_source=goncharoff_pro&utm_medium=internal_slider&utm_campaign=category_slider&utm_content=timeweb_cloud_vps", eyebrow: "Timeweb Cloud", title: "Облачные сервисы и решения для любых IT-продуктов", text: "Начислим +100% к первому депозиту", modal: "ad-modal-timeweb", erid: "5jtCeReLm1VRAj3rc5TA2ZA" },
+    { image: "slide-3.webp", url: "/markirovka.html?utm_source=goncharoff_pro&utm_medium=internal_slider&utm_campaign=category_slider&utm_content=markirovka", eyebrow: "Маркеторро: сервис маркировки рекламы", title: "Маркируй рекламу на автомате", text: "Двойные лимиты / Второй месяц в подарок", modal: "ad-modal-marketorro", erid: "5jtCeReLm1VRAj3rc5TA2ZB" },
+    { image: "slide-4.webp", url: "/lp/myreviews.html?utm_source=goncharoff_pro&utm_medium=internal_slider&utm_campaign=category_slider&utm_content=myreviews", eyebrow: "MyReviews", title: "Сервис для сбора, мониторинга и публикации отзывов", text: "Скидка 50% по промокоду goncharoff", modal: "ad-modal-myreviews", erid: "5jtCeReLm1VRAj3rc5TA2ZC" }
+  ] %>
+  <div class="home-slider__viewport"><div class="home-slider__track" data-home-slider-target="track">
+    <% slides.each do |slide| %>
+      <article class="home-slider__slide" data-home-slider-target="slide">
+        <%= link_to slide[:url], class: "home-slider__link", target: "_blank", rel: "noopener sponsored" do %>
+          <%= image_tag "/images/slider/#{slide[:image]}", alt: "", class: "home-slider__image", loading: "eager" %>
+          <span class="home-slider__shade" aria-hidden="true"></span>
+          <span class="home-slider__copy"><span class="home-slider__eyebrow"><%= slide[:eyebrow] %></span><strong><%= slide[:title] %></strong><span class="home-slider__text"><%= slide[:text] %></span></span>
+        <% end %>
+        <button class="home-slider__ad" type="button" data-action="home-slider#openAd" data-modal-id="<%= slide[:modal] %>">РЕКЛАМА</button>
+      </article>
+    <% end %>
+  </div></div>
+  <button class="home-slider__arrow home-slider__arrow--prev" type="button" data-action="home-slider#previous" aria-label="Предыдущий слайд"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+  <button class="home-slider__arrow home-slider__arrow--next" type="button" data-action="home-slider#next" aria-label="Следующий слайд"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+  <div class="home-slider__pagination" data-home-slider-target="pagination" aria-label="Переключение слайдов"></div>
+  <% slides.each do |slide| %>
+    <div class="home-ad-modal" id="<%= slide[:modal] %>" role="dialog" aria-modal="true" aria-labelledby="<%= slide[:modal] %>-title" hidden data-action="click->home-slider#backdropClose">
+      <div class="home-ad-modal__dialog"><button type="button" class="home-ad-modal__close" data-action="home-slider#closeAd" aria-label="Закрыть">×</button><h2 id="<%= slide[:modal] %>-title">Рекламная информация</h2><dl><div><dt>Рекламодатель</dt><dd>ИП Гончаров Дмитрий Александрович</dd></div><div><dt>ИНН</dt><dd>590522985304</dd></div><div><dt>ERID</dt><dd><%= slide[:erid] %></dd></div></dl></div>
+    </div>
+  <% end %>
+</section>

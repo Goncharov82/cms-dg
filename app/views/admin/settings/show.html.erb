@@ -1,0 +1,83 @@
+<% content_for :title, "Настройки CMS — DG CMS" %>
+<%
+  sections = [
+    { number: 1, title: "Общие настройки", description: "Основные параметры сайта и системы.", icon: :settings, tone: "orange", items: ["Основные параметры", "Сайт и домен", "Язык и часовой пояс", "Форматы даты"] },
+    { number: 2, title: "Профиль", description: "Управление вашим профилем и безопасностью.", icon: :user, tone: "blue", items: ["Личные данные", "Смена пароля", "Аватар"] },
+    { number: 3, title: "Пользователи и роли", description: "Управление пользователями и правами доступа.", icon: :users, tone: "green", items: ["Пользователи", "Роли и разрешения"] },
+    { number: 4, title: "Публикации", description: "Настройки публикации и управления материалами.", icon: :articles, tone: "purple", items: ["Настройки публикации", "Статусы материалов", "Ревизии и черновики"] },
+    { number: 5, title: "Контент", description: "Управление контентом вашего сайта.", icon: :folder, tone: "amber", items: ["Категории", "Статьи", "Страницы", "Меню сайта", "Медиафайлы"] },
+    { number: 6, title: "SEO", description: "Настройки SEO и индексации сайта.", icon: :search, tone: "cyan", items: ["Глобальные метаданные", "Sitemap.xml", "Robots.txt", "Open Graph"] },
+    { number: 7, title: "Переменные", description: "Управление переменными и шаблонами.", icon: :code, tone: "violet", items: ["Переменные сайта", "Шаблоны писем", "Системные значения"] },
+    { number: 8, title: "Внешний вид", description: "Настройка темы и визуального оформления.", icon: :brush, tone: "sky", items: ["Тема и цвета", "Логотип и фавикон", "Шаблоны страниц"] },
+    { number: 9, title: "Аналитика", description: "Настройки аналитики и отслеживания.", icon: :chart, tone: "emerald", items: ["Счётчики посещаемости", "Источники трафика", "События и цели"] },
+    { number: 10, title: "Уведомления", description: "Настройки уведомлений и оповещений.", icon: :bell, tone: "coral", items: ["Email-уведомления", "Системные уведомления", "Журнал отправок"] },
+    { number: 11, title: "Компоненты CMS", description: "Управление компонентами CMS и обновлениями.", icon: :puzzle, tone: "indigo", component: true },
+    { number: 12, title: "Система", description: "Системные операции и безопасность.", icon: :shield, tone: "slate", items: ["Резервные копии", "Безопасность", "Системная информация", "Журнал действий"] }
+  ]
+%>
+
+<div class="admin-container settings-dashboard" data-controller="settings-search">
+  <div class="page-heading settings-page-heading">
+    <div><h1>Настройки CMS</h1></div>
+  </div>
+
+  <div class="settings-toolbar">
+    <label class="settings-search-field">
+      <%= admin_icon(:search) %>
+      <input type="search" placeholder="Поиск по настройкам" autocomplete="off" data-settings-search-target="input" data-action="input->settings-search#filter">
+      <span class="sr-only">Поиск по настройкам</span>
+    </label>
+  </div>
+
+  <div class="settings-overview-grid" data-settings-search-target="grid">
+    <% sections.each do |section| %>
+      <section class="settings-overview-card" data-settings-search-target="card" data-search-text="<%= [section[:title], section[:description], *section.fetch(:items, [])].join(" ").downcase %>">
+        <div class="settings-overview-heading">
+          <div class="settings-overview-icon is-<%= section[:tone] %>"><%= admin_icon(section[:icon]) %></div>
+          <div>
+            <h2><%= section[:number] %>. <%= section[:title] %></h2>
+            <p><%= section[:description] %></p>
+          </div>
+        </div>
+
+        <div class="settings-overview-links">
+          <% if section[:component] %>
+            <a href="#component-updates">
+              <span>Tiptap Editor</span>
+              <span class="settings-inline-status <%= @tiptap_release[:error].present? ? "is-unknown" : (@tiptap_release[:current] ? "is-current" : "is-available") %>"><%= @tiptap_release[:error].present? ? "Проверить" : (@tiptap_release[:current] ? "Актуально" : "Обновление") %></span>
+              <%= admin_icon(:chevron_right) %>
+            </a>
+            <a href="#component-updates">
+              <span>CodeMirror</span>
+              <span class="settings-inline-status <%= @codemirror_release[:error].present? ? "is-unknown" : (@codemirror_release[:current] ? "is-current" : "is-available") %>"><%= @codemirror_release[:error].present? ? "Проверить" : (@codemirror_release[:current] ? "Актуально" : "Обновление") %></span>
+              <%= admin_icon(:chevron_right) %>
+            </a>
+            <a href="#component-updates"><span>Проверка обновлений</span><%= admin_icon(:chevron_right) %></a>
+          <% else %>
+            <% section[:items].each do |item| %>
+              <a href="#settings-coming-soon"><span><%= item %></span><%= admin_icon(:chevron_right) %></a>
+            <% end %>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+  </div>
+
+  <div class="settings-empty-search" hidden data-settings-search-target="empty">
+    <%= admin_icon(:search) %>
+    <strong>Ничего не найдено</strong>
+    <span>Попробуйте изменить поисковый запрос.</span>
+  </div>
+
+  <section class="admin-card settings-card update-card settings-updates-panel" id="component-updates">
+    <div class="settings-card-heading">
+      <div class="settings-card-icon"><%= admin_icon(:puzzle) %></div>
+      <div><p>Компоненты CMS</p><h2>Обновления</h2></div>
+    </div>
+
+    <%= render "component_update", logo: "T", name: "Tiptap Editor", component: "tiptap", release: @tiptap_release, source_label: "GitHub Releases" %>
+    <%= render "component_update", logo: "C", name: "CodeMirror", component: "codemirror", release: @codemirror_release, source_label: "npm Registry" %>
+  </section>
+
+  <span id="settings-coming-soon" class="settings-coming-soon" aria-live="polite">Внутренние страницы разделов будут добавлены на следующем этапе.</span>
+</div>
