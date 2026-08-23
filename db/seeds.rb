@@ -26,23 +26,32 @@ main_menu_categories = [
   "Маркетинг"
 ]
 
-home_item = MenuItem.find_or_initialize_by(slug: "glavnoe")
-home_item.update!(
-  label: "Главное", item_type: :page, status: :published, visibility: "public",
-  menu_name: "main", position: 0, target_label: "Главная страница", target_id: nil, url: "/"
-)
-
-main_menu_categories.each_with_index do |category_name, index|
-  category = Category.find_by!(name: category_name)
-  category.update!(status: :published, parent: nil)
-  item = MenuItem.find_or_initialize_by(slug: category.slug)
-  item.update!(
-    label: category.name, item_type: :category, status: :published, visibility: "public",
-    menu_name: "main", position: index + 1, target_category: category, url: category.public_path
+if Category.exists?
+  home_item = MenuItem.find_or_initialize_by(slug: "glavnoe")
+  home_item.update!(
+    label: "Главное", item_type: :page, status: :published, visibility: "public",
+    menu_name: "main", position: 0, target_label: "Главная страница", target_id: nil, url: "/"
   )
-end
 
-puts "Main menu is ready: #{MenuItem.where(menu_name: "main").count} items."
+  main_menu_categories.each_with_index do |category_name, index|
+    category = Category.find_by(name: category_name)
+    unless category
+      puts "Main menu category is not present yet: #{category_name}"
+      next
+    end
+
+    category.update!(status: :published, parent: nil)
+    item = MenuItem.find_or_initialize_by(slug: category.slug)
+    item.update!(
+      label: category.name, item_type: :category, status: :published, visibility: "public",
+      menu_name: "main", position: index + 1, target_category: category, url: category.public_path
+    )
+  end
+
+  puts "Main menu is ready: #{MenuItem.where(menu_name: "main").count} items."
+else
+  puts "Main menu was not created: import categories first."
+end
 
 author = Author.find_by(email: "info@goncharoff.pro") || Author.find_by(name: "Дмитрий Гончаров")
 avatar_path = Rails.root.join("legacy_source/joomla/images/avatar/dmitry_goncharov.jpg")
