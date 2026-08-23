@@ -21,16 +21,25 @@ module ApplicationHelper
     search: ["M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14", "m16 16 5 5"],
     back: ["m15 18-6-6 6-6"],
     check: ["m5 12 4 4L19 6"],
+    check_circle: ["M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20", "m7.5 12 3 3 6-6"],
+    x_circle: ["M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20", "m8.5 8.5 7 7", "m15.5 8.5-7 7"],
     sliders: ["M4 6h4", "M12 6h8", "M8 4v4", "M4 12h10", "M18 12h2", "M14 10v4", "M4 18h2", "M10 18h10", "M6 16v4"],
     calendar: ["M5 4h14v16H5z", "M8 2v4", "M16 2v4", "M5 9h14"],
     eye: ["M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12", "M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6"],
     users: ["M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8", "M3 21v-2a6 6 0 0 1 12 0v2", "M17 11a3 3 0 1 0 0-6", "M17 15a5 5 0 0 1 4 4v2"],
+    user: ["M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8", "M4 21a8 8 0 0 1 16 0"],
+    bell: ["M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9", "M10 21h4"],
+    puzzle: ["M8 3h3a2 2 0 1 1 4 0h3v5h3a2 2 0 1 1 0 4h-3v9h-5v-3a2 2 0 1 0-4 0v3H3v-5h3a2 2 0 1 0 0-4H3V8h5z"],
+    shield: ["M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"],
+    code: ["m8 9-3 3 3 3", "m16 9 3 3-3 3", "m14 5-4 14"],
+    brush: ["m14.5 4.5 5 5L9 20H4v-5z", "m12 7 5 5", "M4 20c0-2 1-4 4-5"],
     clock: ["M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18", "M12 7v5l3 2"],
     save: ["M5 3h12l2 2v16H5z", "M8 3v6h8V3", "M8 15h8v6"],
     desktop: ["M3 4h18v13H3z", "M8 21h8", "M12 17v4"],
     phone: ["M8 2h8v20H8z", "M11 18h2"],
     sun: ["M12 2v2", "M12 20v2", "M4.93 4.93l1.42 1.42", "M17.66 17.66l1.41 1.41", "M2 12h2", "M20 12h2", "M6.34 17.66l-1.41 1.41", "M19.07 4.93l-1.41 1.42", "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8"],
-    moon: ["M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2z"]
+    moon: ["M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2z"],
+    external: ["M14 4h6v6", "M20 4 11 13", "M18 13v6H5V6h6"]
   }.freeze
 
   def admin_icon(name, class_name: "admin-icon")
@@ -40,6 +49,61 @@ module ApplicationHelper
   end
 
   def admin_display_name(user)
-    user.admin? ? "Администратор" : user.email.split("@").first.tr("._-", " ").titleize
+    user.admin? ? "Дмитрий Гончаров" : user.email.split("@").first.tr("._-", " ").titleize
+  end
+
+  def admin_access_label(record)
+    record.visibility == "admin" ? "Админский" : "Публичный"
+  end
+
+  def admin_access_options
+    [["Публичный", "public"]].tap do |options|
+      options << ["Админский", "admin"] if current_user&.admin?
+    end
+  end
+
+  def admin_menu_item_binding(item)
+    type = {
+      "page" => "Страница",
+      "category" => "Категория",
+      "article" => "Статья",
+      "external" => "Внешняя ссылка"
+    }.fetch(item.item_type)
+    target = item.target_label.presence || item.url.presence || "Не выбрано"
+    safe_join([tag.span("#{type}:", class: "entity-meta-label"), " #{target}"])
+  end
+
+  def admin_state_indicator(record)
+    published = record.published?
+    label = published ? "Опубликовано" : "Не опубликовано"
+    icon = admin_icon(published ? :check_circle : :x_circle)
+    changed_at = if published && record.respond_to?(:published_at) && record.published_at.present?
+      record.published_at
+    else
+      record.updated_at
+    end
+    tooltip = if published
+      "Опубликовано\nИзменено: #{I18n.l(changed_at, format: "%d.%m.%Y, %H:%M")}\nСнять с публикации"
+    else
+      "Не опубликовано\nОпубликовать"
+    end
+    path = public_send("toggle_status_admin_#{record.model_name.singular}_path", record)
+
+    button_to path,
+      method: :patch,
+      class: "state-toggle state-indicator #{published ? "is-published" : "is-unpublished"}",
+      title: tooltip.lines.first.strip,
+      aria: { label: "#{label}. Изменить состояние публикации" },
+      data: {
+        controller: "tooltip",
+        action: "mouseenter->tooltip#show mouseleave->tooltip#hide focus->tooltip#show blur->tooltip#hide",
+        tooltip: tooltip
+      } do
+        icon
+      end
+  end
+
+  def public_article_card_image(article)
+    [article.preview_image, article.intro_image, article.main_image].compact.find { |asset| asset.file.attached? }
   end
 end

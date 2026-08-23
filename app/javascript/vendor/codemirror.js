@@ -1,0 +1,7 @@
+export { EditorView, basicSetup } from "codemirror"
+export { Compartment } from "@codemirror/state"
+export { indentSelection } from "@codemirror/commands"
+export { html } from "@codemirror/lang-html"
+export { css } from "@codemirror/lang-css"
+export { javascript } from "@codemirror/lang-javascript"
+export { oneDark } from "@codemirror/theme-one-dark"

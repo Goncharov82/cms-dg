@@ -1,0 +1,16 @@
+<% timeweb_banner = (1..9).to_a.sample %>
+<% marketorro_banner = (1..6).to_a.sample %>
+
+<aside class="public-category__sidebar">
+  <a class="public-sidebar-ad" href="/vps/registraciya-hostinga-timeweb?utm_source=goncharoff_pro&utm_medium=banner&utm_campaign=timeweb_rotation&utm_content=banner_<%= timeweb_banner %>" target="_blank" rel="noopener sponsored">
+    <%= image_tag "/images/banners/timeweb/timeweb_banner_#{timeweb_banner}.webp", alt: "Timeweb — хостинг и VPS", width: 400, height: 320 %><span>РЕКЛАМА</span>
+  </a>
+
+  <section class="public-latest"><h2>Новые статьи</h2><div>
+    <% @latest_articles.each do |article| %><%= link_to article.rendered_title, article.public_path %><% end %>
+  </div></section>
+
+  <a class="public-sidebar-ad" href="/markirovka.html?utm_source=goncharoff_pro&utm_medium=banner&utm_campaign=marketorro_rotation&utm_content=banner_<%= marketorro_banner %>" target="_blank" rel="noopener sponsored">
+    <%= image_tag "/images/banners/marketorro/marketorro_banner_#{marketorro_banner}.png", alt: "Маркеторро — автоматическая маркировка рекламы", width: 400, height: 320 %><span>РЕКЛАМА</span>
+  </a>
+</aside>

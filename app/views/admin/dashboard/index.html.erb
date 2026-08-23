@@ -20,19 +20,18 @@
       </div>
       <div class="materials-table-wrap">
         <table class="materials-table">
-          <thead><tr><th>Заголовок</th><th>Статус</th><th>Дата</th><th><span class="sr-only">Действия</span></th></tr></thead>
+          <thead><tr><th>Заголовок</th><th>Статус</th><th>Дата</th></tr></thead>
           <tbody>
             <% if @recent_articles.any? %>
               <% @recent_articles.each do |article| %>
                 <tr>
-                  <td><%= link_to article.title, admin_article_path(article), class: "material-title" %><span class="material-category"><%= article.category&.name %></span></td>
+                  <td><%= link_to article.rendered_title, edit_admin_article_path(article), class: "material-title" %><span class="material-category"><%= article.category&.rendered_name %></span></td>
                   <td><span class="status-badge is-<%= article.status %>"><%= article.published? ? "Опубликовано" : "Черновик" %></span></td>
                   <td class="material-date"><%= (article.published_at || article.created_at).strftime("%d.%m.%Y") %></td>
-                  <td><%= link_to admin_article_path(article), class: "dots-button", aria: { label: "Открыть статью" } do %><%= admin_icon(:dots) %><% end %></td>
                 </tr>
               <% end %>
             <% else %>
-              <tr><td colspan="4"><div class="empty-row"><span class="empty-icon"><%= admin_icon(:articles) %></span><strong>Материалов пока нет</strong><span>Создайте первую статью — она появится в этом списке.</span></div></td></tr>
+              <tr><td colspan="3"><div class="empty-row"><span class="empty-icon"><%= admin_icon(:articles) %></span><strong>Материалов пока нет</strong><span>Создайте первую статью — она появится в этом списке.</span></div></td></tr>
             <% end %>
           </tbody>
         </table>

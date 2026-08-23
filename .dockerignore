@@ -46,6 +46,9 @@
 # Ignore development files
 /.devcontainer
 
+# Ignore local backup archives.
+/*.zip
+
 # Ignore Docker-related files
 /.dockerignore
 /Dockerfile*

@@ -4,7 +4,7 @@ export default class extends Controller {
   static targets = ["name", "slug", "slugPreview", "seoSlugPreview", "shortDescription", "descriptionCount", "seoTitle", "metaDescription", "seoTitlePreview", "seoDescriptionPreview"]
 
   connect() {
-    this.slugLocked = this.slugTarget.value.length > 0
+    this.slugLocked = this.slugTarget.value.length > 0 && this.slugTarget.value !== this.slugify(this.nameTarget.value)
     this.updatePreview()
     this.updateCount()
     this.updateSeo()
@@ -18,12 +18,6 @@ export default class extends Controller {
 
   lockSlug() {
     this.slugLocked = this.slugTarget.value.length > 0
-    this.updatePreview()
-  }
-
-  generateSlug() {
-    this.slugTarget.value = this.slugify(this.nameTarget.value)
-    this.slugLocked = true
     this.updatePreview()
   }
 

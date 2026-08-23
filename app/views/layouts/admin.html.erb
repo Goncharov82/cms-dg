@@ -19,19 +19,22 @@
           </button>
           <span class="mobile-brand">DG CMS</span>
 
+          <%= link_to root_path, class: "open-site-link", target: "_blank", rel: "noopener", aria: { label: "Открыть главную страницу сайта в новой вкладке" } do %>
+            <span>Открыть сайт</span><%= admin_icon(:external) %>
+          <% end %>
           <div class="theme-switch" role="group" aria-label="Тема оформления">
             <button type="button" class="theme-button" data-theme-target="lightButton" data-action="theme#light" aria-label="Включить светлую тему"><%= admin_icon(:sun) %></button>
             <button type="button" class="theme-button" data-theme-target="darkButton" data-action="theme#dark" aria-label="Включить тёмную тему"><%= admin_icon(:moon) %></button>
           </div>
-          <details class="profile-menu">
+          <details class="profile-menu" data-controller="dismissible-details">
             <summary class="profile-trigger">
-              <span class="profile-avatar"><%= current_user.email.first.upcase %></span>
+              <span class="profile-avatar"><%= admin_display_name(current_user).first %></span>
               <span class="profile-name"><%= admin_display_name(current_user) %></span>
               <%= admin_icon(:chevron_down, class_name: "profile-chevron") %>
             </summary>
             <div class="profile-dropdown">
               <span class="profile-dropdown-link is-disabled">Профиль</span>
-              <span class="profile-dropdown-link is-disabled">Настройки</span>
+              <%= link_to "Настройки", admin_settings_path, class: "profile-dropdown-link" %>
               <div class="profile-divider"></div>
               <%= button_to session_path, method: :delete, class: "profile-dropdown-link profile-logout" do %>
                 <span>Выйти</span><%= admin_icon(:logout) %>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="view-transition" content="same-origin">
     <meta name="application-name" content="Goncharoff.pro">
+    <% if content_for?(:meta_description) %><meta name="description" content="<%= content_for(:meta_description) %>"><% end %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= yield :head %>

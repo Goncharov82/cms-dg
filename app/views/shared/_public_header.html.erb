@@ -1,0 +1,25 @@
+<header class="public-header">
+  <div class="public-container public-header__inner">
+    <%= link_to root_path, class: "public-logo", aria: { label: "Goncharoff.pro — на главную" } do %>
+      <%= image_tag "/images/logo/goncharoffpro.svg", alt: "Goncharoff.pro", width: 304, height: 34 %>
+    <% end %>
+
+    <nav class="public-nav" aria-label="Основное меню">
+      <%= link_to "Хостинги и VPS", "/vps", class: ("is-active" if @category&.slug == "vps") %>
+      <%= link_to "О сайтах", "/website", class: ("is-active" if @category&.slug == "website") %>
+      <%= link_to "Нейросети", "/ai", class: ("is-active" if @category&.slug == "ai") %>
+      <%= link_to "Маркетинг", "/marketing", class: ("is-active" if @category&.slug == "marketing") %>
+      <%= link_to "Советы", "/sovet", class: ("is-active" if @category&.slug == "sovet") %>
+      <%= link_to "Обзоры", "/reviews", class: ("is-active" if @category&.slug == "reviews") %>
+    </nav>
+
+    <details class="public-mobile-nav">
+      <summary aria-label="Открыть меню"><span></span><span></span><span></span></summary>
+      <nav aria-label="Мобильное меню">
+        <%= link_to "Хостинги и VPS", "/vps" %><%= link_to "О сайтах", "/website" %>
+        <%= link_to "Нейросети", "/ai" %><%= link_to "Маркетинг", "/marketing" %>
+        <%= link_to "Советы", "/sovet" %><%= link_to "Обзоры", "/reviews" %>
+      </nav>
+    </details>
+  </div>
+</header>
