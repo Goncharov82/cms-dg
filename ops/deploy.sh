@@ -6,12 +6,15 @@ if [[ $# -ne 1 ]]; then
   exit 64
 fi
 
-readonly DEPLOY_ROOT="${DEPLOY_ROOT:-/opt/cms-dg}"
+readonly DEPLOY_ROOT="${DEPLOY_ROOT:-${HOME}/app}"
 readonly COMPOSE_FILE="${DEPLOY_ROOT}/compose.production.yaml"
 readonly ENV_FILE="${DEPLOY_ROOT}/shared/.env"
 readonly BACKUP_DIR="${DEPLOY_ROOT}/backups"
 readonly IMAGE="$1"
 readonly CURRENT_IMAGE_FILE="${DEPLOY_ROOT}/current-image"
+
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+export DOCKER_HOST="${DOCKER_HOST:-unix://${XDG_RUNTIME_DIR}/docker.sock}"
 
 if [[ ! -f "${COMPOSE_FILE}" ]]; then
   echo "Missing ${COMPOSE_FILE}" >&2
@@ -28,7 +31,7 @@ export APP_IMAGE="${IMAGE}"
 export DEPLOY_ROOT
 
 compose() {
-  docker compose --project-name cms-dg --env-file "${ENV_FILE}" -f "${COMPOSE_FILE}" "$@"
+  docker compose --project-name test-goncharoff-pro --env-file "${ENV_FILE}" -f "${COMPOSE_FILE}" "$@"
 }
 
 echo "Pulling ${IMAGE}"

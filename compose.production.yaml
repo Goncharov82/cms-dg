@@ -1,17 +1,17 @@
-name: cms-dg
+name: test-goncharoff-pro
 
 services:
   app:
     image: ${APP_IMAGE:?APP_IMAGE must contain the immutable production image tag}
     restart: unless-stopped
     env_file:
-      - ${DEPLOY_ROOT:-/opt/cms-dg}/shared/.env
+      - ${DEPLOY_ROOT:-/var/www/test.goncharoff.pro/data/app}/shared/.env
     environment:
       RAILS_ENV: production
       DATABASE_HOST: postgres
       SOLID_QUEUE_IN_PUMA: "true"
     ports:
-      - "${APP_BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-3000}:80"
+      - "${APP_BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-3090}:80"
     volumes:
       - storage:/rails/storage
     depends_on:
@@ -28,7 +28,7 @@ services:
     image: postgres:18.4
     restart: unless-stopped
     env_file:
-      - ${DEPLOY_ROOT:-/opt/cms-dg}/shared/.env
+      - ${DEPLOY_ROOT:-/var/www/test.goncharoff.pro/data/app}/shared/.env
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USERNAME}
@@ -43,6 +43,6 @@ services:
 
 volumes:
   postgres_data:
-    name: cms_dg_postgres_data
+    name: test_goncharoff_pro_postgres_data
   storage:
-    name: cms_dg_storage
+    name: test_goncharoff_pro_storage

@@ -1,53 +1,41 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-if [[ "${EUID}" -ne 0 ]]; then
-  echo "Run this script as root." >&2
+if [[ "${EUID}" -eq 0 ]]; then
+  echo "Run this script as test.goncharoff.pro, not as root." >&2
   exit 77
 fi
 
-if [[ -z "${DEPLOY_PUBLIC_KEY:-}" ]]; then
-  echo "Set DEPLOY_PUBLIC_KEY to the dedicated GitHub Actions public key." >&2
-  exit 64
+if [[ "$(id -un)" != "test.goncharoff.pro" ]]; then
+  echo "Expected user test.goncharoff.pro, got $(id -un)." >&2
+  exit 77
 fi
 
-if ! command -v docker >/dev/null 2>&1 || ! docker compose version >/dev/null 2>&1; then
-  apt-get update
-  apt-get install -y ca-certificates curl
-  install -m 0755 -d /etc/apt/keyrings
-  curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
-  chmod a+r /etc/apt/keyrings/docker.asc
-  . /etc/os-release
-  arch="$(dpkg --print-architecture)"
-  printf 'Types: deb\nURIs: https://download.docker.com/linux/debian\nSuites: %s\nComponents: stable\nArchitectures: %s\nSigned-By: /etc/apt/keyrings/docker.asc\n' \
-    "${VERSION_CODENAME}" "${arch}" > /etc/apt/sources.list.d/docker.sources
-  apt-get update
-  apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+if ! command -v newuidmap >/dev/null 2>&1 || ! command -v newgidmap >/dev/null 2>&1; then
+  echo "Missing uidmap. An administrator must run: apt-get install -y uidmap" >&2
+  exit 69
 fi
 
-if ! id deploy >/dev/null 2>&1; then
-  useradd --create-home --shell /bin/bash deploy
+if ! grep -q '^test\.goncharoff\.pro:' /etc/subuid || ! grep -q '^test\.goncharoff\.pro:' /etc/subgid; then
+  echo "Missing subordinate UID/GID ranges for rootless Docker." >&2
+  exit 69
 fi
 
-usermod -aG docker deploy
-install -d -m 700 -o deploy -g deploy /home/deploy/.ssh
-authorized_keys=/home/deploy/.ssh/authorized_keys
-touch "${authorized_keys}"
-if ! grep -Fqx "${DEPLOY_PUBLIC_KEY}" "${authorized_keys}"; then
-  printf '%s\n' "${DEPLOY_PUBLIC_KEY}" >> "${authorized_keys}"
-fi
-chown deploy:deploy "${authorized_keys}"
-chmod 600 "${authorized_keys}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 
-install -d -m 755 -o deploy -g deploy /opt/cms-dg
-install -d -m 700 -o deploy -g deploy /opt/cms-dg/shared
-install -d -m 700 -o deploy -g deploy /opt/cms-dg/backups
-
-if [[ ! -f /opt/cms-dg/shared/.env ]]; then
-  install -m 600 -o deploy -g deploy /dev/null /opt/cms-dg/shared/.env
+if [[ ! -S "${XDG_RUNTIME_DIR}/docker.sock" ]]; then
+  dockerd-rootless-setuptool.sh install
 fi
 
-systemctl enable --now docker
+export DOCKER_HOST="unix://${XDG_RUNTIME_DIR}/docker.sock"
+docker info >/dev/null
 
-echo "Server bootstrap completed."
-echo "Next: fill /opt/cms-dg/shared/.env from .env.production.example."
+deploy_root="${HOME}/app"
+install -d -m 700 "${deploy_root}/shared"
+install -d -m 700 "${deploy_root}/backups"
+
+if [[ ! -f "${deploy_root}/shared/.env" ]]; then
+  install -m 600 /dev/null "${deploy_root}/shared/.env"
+fi
+
+echo "Rootless Docker and ${deploy_root} are ready for test.goncharoff.pro."

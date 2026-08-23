@@ -16,7 +16,8 @@ permissions:
 env:
   SERVER_HOST: 78.24.217.140
   SERVER_PORT: "22"
-  SERVER_USER: deploy
+  SERVER_USER: test.goncharoff.pro
+  DEPLOY_ROOT: /var/www/test.goncharoff.pro/data/app
   IMAGE_NAME: ghcr.io/${{ github.repository }}
 
 jobs:
@@ -44,7 +45,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Build test image
-        run: docker build --target development --tag cms-dg:test .
+        run: docker build --target development --tag test-goncharoff-pro:test .
 
       - name: Run Rails tests
         run: >-
@@ -54,7 +55,7 @@ jobs:
           -e DATABASE_PORT=5432
           -e DATABASE_USERNAME=goncharoff
           -e DATABASE_PASSWORD=test_password
-          cms-dg:test
+          test-goncharoff-pro:test
           bin/rails db:prepare test
 
       - name: Normalize image name
@@ -83,25 +84,25 @@ jobs:
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
         run: |
           install -m 700 -d ~/.ssh
-          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/cms_dg_deploy
-          chmod 600 ~/.ssh/cms_dg_deploy
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/test_goncharoff_pro_deploy
+          chmod 600 ~/.ssh/test_goncharoff_pro_deploy
           printf '%s\n' '78.24.217.140 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINTub0ZDAUw2Gc2MOWbHGpjZY4hJ91QR4UU6mjvEwBAr' > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
       - name: Upload deployment configuration
         run: |
-          scp -P "$SERVER_PORT" -i ~/.ssh/cms_dg_deploy \
+          scp -P "$SERVER_PORT" -i ~/.ssh/test_goncharoff_pro_deploy \
             compose.production.yaml ops/deploy.sh \
-            "$SERVER_USER@$SERVER_HOST:/opt/cms-dg/"
+            "$SERVER_USER@$SERVER_HOST:$DEPLOY_ROOT/"
 
       - name: Pull image and deploy
         env:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IMAGE: ${{ steps.image.outputs.name }}:${{ github.sha }}
         run: |
-          printf '%s' "$GHCR_TOKEN" | ssh -p "$SERVER_PORT" -i ~/.ssh/cms_dg_deploy \
+          printf '%s' "$GHCR_TOKEN" | ssh -p "$SERVER_PORT" -i ~/.ssh/test_goncharoff_pro_deploy \
             "$SERVER_USER@$SERVER_HOST" \
-            "docker login ghcr.io --username '${{ github.actor }}' --password-stdin"
-          ssh -p "$SERVER_PORT" -i ~/.ssh/cms_dg_deploy \
+            "XDG_RUNTIME_DIR=/run/user/1082 DOCKER_HOST=unix:///run/user/1082/docker.sock docker login ghcr.io --username '${{ github.actor }}' --password-stdin"
+          ssh -p "$SERVER_PORT" -i ~/.ssh/test_goncharoff_pro_deploy \
             "$SERVER_USER@$SERVER_HOST" \
-            "chmod 700 /opt/cms-dg/deploy.sh && /opt/cms-dg/deploy.sh '$IMAGE'"
+            "chmod 700 '$DEPLOY_ROOT/deploy.sh' && DEPLOY_ROOT='$DEPLOY_ROOT' '$DEPLOY_ROOT/deploy.sh' '$IMAGE'"
