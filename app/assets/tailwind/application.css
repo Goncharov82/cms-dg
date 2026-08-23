@@ -933,6 +933,22 @@
 .settings-empty-search strong { color: var(--admin-ink); font-size: 15px; }
 .settings-empty-search span { font-size: 12px; }
 .settings-updates-panel { margin-top: 28px; scroll-margin-top: 96px; }
+.settings-general-panel { margin-top: 28px; scroll-margin-top: 96px; }
+.settings-general-form { margin-top: 22px; }
+.settings-general-row { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 22px 24px; border: 1px solid var(--admin-line); border-radius: 10px; background: var(--admin-soft); }
+.settings-general-copy { max-width: 780px; }
+.settings-general-copy h3 { margin: 0 0 8px; font-size: 17px; }
+.settings-general-copy p { margin: 0; color: var(--admin-muted); font-size: 13px; line-height: 1.55; }
+.settings-general-copy > span { display: block; margin-top: 7px; color: var(--admin-muted); font-size: 11px; }
+.settings-site-switch { flex: 0 0 auto; min-width: 190px; display: inline-flex; align-items: center; gap: 11px; cursor: pointer; color: var(--admin-ink); }
+.settings-site-switch input { position: absolute; opacity: 0; pointer-events: none; }
+.settings-site-switch-track { width: 46px; height: 26px; flex: 0 0 auto; padding: 3px; border-radius: 20px; background: #cbd2dc; transition: background .18s ease, box-shadow .18s ease; }
+.settings-site-switch-track > span { display: block; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(15,23,42,.24); transition: transform .18s ease; }
+.settings-site-switch input:checked + .settings-site-switch-track { background: var(--admin-orange); }
+.settings-site-switch input:checked + .settings-site-switch-track > span { transform: translateX(20px); }
+.settings-site-switch input:focus-visible + .settings-site-switch-track { box-shadow: 0 0 0 3px rgba(255,104,0,.22); }
+.settings-site-switch strong { font-size: 13px; white-space: nowrap; }
+.settings-site-switch.is-disabled { cursor: not-allowed; opacity: .55; }
 .settings-coming-soon { min-height: 38px; display: flex; align-items: center; justify-content: center; margin-top: 18px; color: var(--admin-muted); font-size: 12px; opacity: 0; transition: opacity .18s ease; }
 .settings-coming-soon:target { opacity: 1; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
@@ -956,6 +972,24 @@
 .admin-body[data-theme="dark"] .settings-overview-icon.is-coral { color: #ff9870; background: #352119; }
 .admin-body[data-theme="dark"] .settings-overview-icon.is-indigo { color: #7fa6f2; background: #19243c; }
 .admin-body[data-theme="dark"] .settings-overview-icon.is-slate { color: #9aa7b9; background: #202a39; }
+.admin-body[data-theme="dark"] .settings-general-row { background: #111827; }
+.admin-body[data-theme="dark"] .settings-site-switch-track { background: #465268; }
+
+@media(max-width:720px){
+  .settings-general-row { align-items: flex-start; flex-direction: column; padding: 18px; }
+  .settings-site-switch { min-width: 0; }
+}
+
+/* Public maintenance mode */
+.maintenance-body { min-height: 100vh; margin: 0; color: #e7ebf2; background: #111a29; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.maintenance-page { min-height: 100vh; display: grid; place-items: center; padding: 28px; background: radial-gradient(circle at 80% 10%, rgba(255,104,0,.16), transparent 32%), linear-gradient(145deg, #111a29, #182338); }
+.maintenance-card { width: min(100%, 650px); padding: clamp(34px, 7vw, 66px); border: 1px solid rgba(255,255,255,.13); border-radius: 22px; background: rgba(15,23,42,.82); box-shadow: 0 28px 75px rgba(0,0,0,.28); }
+.maintenance-logo { display: inline-flex; margin-bottom: 48px; color: #f4f6f9; font-size: clamp(24px, 5vw, 36px); font-weight: 900; letter-spacing: -.04em; text-decoration: none; }
+.maintenance-logo strong { color: #ff6800; }
+.maintenance-status { display: flex; align-items: center; gap: 9px; margin-bottom: 15px; color: #aeb8c7; font-size: 12px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+.maintenance-status span { width: 9px; height: 9px; border-radius: 50%; background: #ff6800; box-shadow: 0 0 0 5px rgba(255,104,0,.14); }
+.maintenance-card h1 { margin: 0; color: #f3f5f8; font-size: clamp(34px, 7vw, 58px); line-height: 1.04; letter-spacing: -.045em; }
+.maintenance-card p { max-width: 500px; margin: 22px 0 0; color: #aeb8c7; font-size: clamp(16px, 2.5vw, 19px); line-height: 1.65; }
 
 /* Complete dark-theme coverage for controls introduced across admin screens. */
 .admin-body[data-theme="dark"] .collection-page-size select,

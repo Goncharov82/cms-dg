@@ -1,4 +1,6 @@
 <% content_for :title, "Настройки CMS — DG CMS" %>
+<% content_for :admin_section_title, "Настройки CMS" %>
+<% content_for :admin_section_icon do %><%= admin_icon(:settings) %><% end %>
 <%
   sections = [
     { number: 1, title: "Общие настройки", description: "Основные параметры сайта и системы.", icon: :settings, tone: "orange", items: ["Основные параметры", "Сайт и домен", "Язык и часовой пояс", "Форматы даты"] },
@@ -17,10 +19,6 @@
 %>
 
 <div class="admin-container settings-dashboard" data-controller="settings-search">
-  <div class="page-heading settings-page-heading">
-    <div><h1>Настройки CMS</h1></div>
-  </div>
-
   <div class="settings-toolbar">
     <label class="settings-search-field">
       <%= admin_icon(:search) %>
@@ -55,7 +53,7 @@
             <a href="#component-updates"><span>Проверка обновлений</span><%= admin_icon(:chevron_right) %></a>
           <% else %>
             <% section[:items].each do |item| %>
-              <a href="#settings-coming-soon"><span><%= item %></span><%= admin_icon(:chevron_right) %></a>
+              <a href="<%= section[:number] == 1 ? "#general-settings" : "#settings-coming-soon" %>"><span><%= item %></span><%= admin_icon(:chevron_right) %></a>
             <% end %>
           <% end %>
         </div>
@@ -77,6 +75,33 @@
 
     <%= render "component_update", logo: "T", name: "Tiptap Editor", component: "tiptap", release: @tiptap_release, source_label: "GitHub Releases" %>
     <%= render "component_update", logo: "C", name: "CodeMirror", component: "codemirror", release: @codemirror_release, source_label: "npm Registry" %>
+  </section>
+
+  <section class="admin-card settings-card settings-general-panel" id="general-settings">
+    <div class="settings-card-heading">
+      <div class="settings-card-icon"><%= admin_icon(:settings) %></div>
+      <div><p>Система</p><h2>Общие настройки</h2></div>
+    </div>
+
+    <%= form_with url: admin_settings_path, method: :patch, class: "settings-general-form", data: { controller: "settings-form" } do |form| %>
+      <div class="settings-general-row">
+        <div class="settings-general-copy">
+          <h3>Выключить сайт</h3>
+          <p>Закрывает фронтальную часть от внешних посетителей и поисковых роботов. Администратор, авторизованный в CMS, продолжит видеть сайт.</p>
+          <span>Вход в CMS и панель управления остаются доступными.</span>
+        </div>
+
+        <label class="settings-site-switch <%= "is-disabled" unless current_user.admin? %>">
+          <%= form.check_box :site_disabled,
+            { checked: @site_disabled,
+              disabled: !current_user.admin?,
+              data: { action: "change->settings-form#submit", settings_form_target: "input" } },
+            "1", "0" %>
+          <span class="settings-site-switch-track" aria-hidden="true"><span></span></span>
+          <strong data-settings-form-target="label"><%= @site_disabled ? "Сайт выключен" : "Сайт доступен" %></strong>
+        </label>
+      </div>
+    <% end %>
   </section>
 
   <span id="settings-coming-soon" class="settings-coming-soon" aria-live="polite">Внутренние страницы разделов будут добавлены на следующем этапе.</span>

@@ -339,12 +339,20 @@ class AdminContentTest < ActionDispatch::IntegrationTest
       get admin_settings_path
       assert_response :success
       assert_select "h1", "Настройки CMS"
+      assert_select "header.admin-topbar h1.admin-topbar-title", "Настройки CMS"
+      assert_select "header.admin-topbar .admin-topbar-title-icon svg", count: 1
+      assert_select ".page-heading", count: 0
       assert_select "input[placeholder='Поиск по настройкам']"
       assert_select ".settings-overview-card", count: 12
       assert_select ".component-update-row", text: /Tiptap Editor/
       assert_select ".component-update-row", text: /CodeMirror/
       assert_select ".update-status.is-current", text: "Актуальная версия", minimum: 1
       assert_select "form[action='#{admin_settings_check_updates_path}'] button", text: "Проверить обновление", count: 2
+      assert_select "#general-settings form[action='#{admin_settings_path}'][method='post']" do
+        assert_select "input[name='_method'][value='patch']"
+        assert_select "input[name='site_disabled'][type='checkbox']"
+        assert_select ".settings-site-switch", text: /Сайт доступен/
+      end
     ensure
       TiptapReleaseChecker.define_singleton_method(:call, original_tiptap_call)
       CodeMirrorReleaseChecker.define_singleton_method(:call, original_codemirror_call)
