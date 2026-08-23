@@ -2,7 +2,10 @@ module Admin
   class PagesController < BaseController
     before_action :set_page, only: %i[edit update toggle_status]
     def index
-      @pages = content_scope(Page).order(updated_at: :desc)
+      scope = content_scope(Page).order(updated_at: :desc)
+      @published_count = scope.where(status: :published).count
+      @draft_count = scope.where(status: :draft).count
+      @pages = paginate_collection(scope)
     end
 
     def new

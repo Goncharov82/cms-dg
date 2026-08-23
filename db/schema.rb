@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_18_194500) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_23_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -211,6 +211,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_18_194500) do
     t.index ["slug"], name: "index_pages_on_slug", unique: true
     t.index ["status"], name: "index_pages_on_status"
     t.index ["views_count"], name: "index_pages_on_views_count"
+  end
+
+  create_table "site_settings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "key", null: false
+    t.datetime "updated_at", null: false
+    t.text "value"
+    t.index ["key"], name: "index_site_settings_on_key", unique: true
   end
 
   create_table "users", force: :cascade do |t|

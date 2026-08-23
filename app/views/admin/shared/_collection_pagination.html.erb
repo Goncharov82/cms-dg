@@ -1,0 +1,34 @@
+<% show_count = local_assigns.fetch(:show_count, true) %>
+<% if show_count || @total_pages > 1 %>
+<div class="collection-footer collection-footer--paginated <%= "collection-footer--pagination-only" unless show_count %>">
+  <% if show_count %>
+    <span><span data-table-filters-target="shown" data-total="<%= @collection_total %>" data-page-start="<%= @page_start %>" data-page-end="<%= @page_end %>">Показано <%= @page_start %>–<%= @page_end %> из <%= @collection_total %></span> <%= item_name %></span>
+  <% end %>
+
+  <% if @total_pages > 1 %>
+    <nav class="admin-pagination" aria-label="Навигация по страницам">
+      <% if @current_page > 1 %>
+        <%= link_to admin_collection_page_path(@current_page - 1), class: "admin-pagination__arrow", aria: { label: "Предыдущая страница" } do %><%= admin_icon(:back) %><% end %>
+      <% else %>
+        <span class="admin-pagination__arrow is-disabled" aria-hidden="true"><%= admin_icon(:back) %></span>
+      <% end %>
+
+      <% admin_pagination_pages(@current_page, @total_pages).each do |page| %>
+        <% if page == :ellipsis %>
+          <span class="admin-pagination__ellipsis" aria-hidden="true">…</span>
+        <% elsif page == @current_page %>
+          <span class="admin-pagination__page is-active" aria-current="page"><%= page %></span>
+        <% else %>
+          <%= link_to page, admin_collection_page_path(page), class: "admin-pagination__page", aria: { label: "Страница #{page}" } %>
+        <% end %>
+      <% end %>
+
+      <% if @current_page < @total_pages %>
+        <%= link_to admin_collection_page_path(@current_page + 1), class: "admin-pagination__arrow is-next", aria: { label: "Следующая страница" } do %><%= admin_icon(:back) %><% end %>
+      <% else %>
+        <span class="admin-pagination__arrow is-next is-disabled" aria-hidden="true"><%= admin_icon(:back) %></span>
+      <% end %>
+    </nav>
+  <% end %>
+</div>
+<% end %>

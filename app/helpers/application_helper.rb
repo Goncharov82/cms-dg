@@ -106,4 +106,41 @@ module ApplicationHelper
   def public_article_card_image(article)
     [article.preview_image, article.intro_image, article.main_image].compact.find { |asset| asset.file.attached? }
   end
+
+  def public_main_menu_items
+    @public_main_menu_items ||= MenuItem.published
+      .publicly_accessible
+      .where(menu_name: "main")
+      .order(:position, :created_at)
+  end
+
+  def public_menu_item_url(item)
+    return item.url if item.url.present?
+    return item.target_category.public_path if item.category? && item.target_category.present?
+
+    "/#{item.slug}"
+  end
+
+  def public_menu_item_link_options(item)
+    rel = []
+    rel << "nofollow" if item.nofollow?
+    rel.concat(%w[noopener noreferrer]) if item.open_new_tab?
+
+    { target: ("_blank" if item.open_new_tab?), rel: rel.presence&.join(" ") }.compact
+  end
+
+  def admin_pagination_pages(current_page, total_pages)
+    return (1..total_pages).to_a if total_pages <= 7
+
+    pages = [1, total_pages, current_page - 1, current_page, current_page + 1]
+      .select { |page| page.between?(1, total_pages) }
+      .uniq
+      .sort
+
+    pages.each_cons(2).flat_map { |left, right| right - left > 1 ? [left, :ellipsis] : [left] } + [pages.last]
+  end
+
+  def admin_collection_page_path(page)
+    url_for(request.query_parameters.merge(page: page, per_page: @per_page))
+  end
 end

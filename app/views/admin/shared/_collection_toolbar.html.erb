@@ -1,0 +1,22 @@
+<div class="bulk-row collection-actions-bar">
+  <%= link_to create_path, class: "admin-button collection-create-button" do %>
+    <%= admin_icon(:plus) %>
+    <span>Создать</span>
+  <% end %>
+  <label class="collection-action-select">
+    <span class="sr-only">Действие с выбранными элементами</span>
+    <select disabled aria-label="Действие">
+      <option>Действие</option>
+    </select>
+  </label>
+
+  <% if local_assigns[:summary_items].present? %>
+    <div class="collection-action-summary" aria-label="Сводка списка">
+      <% summary_items.each do |label, value| %>
+        <span><%= label %>: <strong><%= value %></strong></span>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= render "admin/shared/per_page_selector" %>
+</div>

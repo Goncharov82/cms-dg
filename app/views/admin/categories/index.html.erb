@@ -1,7 +1,8 @@
 <% content_for :title, "Категории — DG CMS" %>
+<% content_for :admin_section_title, "Категории" %>
+<% content_for :admin_section_icon do %><%= admin_icon(:folder) %><% end %>
 <div class="admin-container">
-  <div class="page-heading"><div><p class="page-eyebrow">Контент</p><h1>Категории</h1></div><%= link_to new_admin_category_path, class: "admin-button is-primary" do %><%= admin_icon(:plus) %><span>Добавить категорию</span><% end %></div>
-  <section class="collection-panel" data-controller="table-columns table-filters" data-table-columns-key-value="categories">
+  <section class="collection-panel" data-controller="table-columns table-filters table-selection" data-table-columns-key-value="categories">
     <div class="filter-row">
       <label class="filter-search"><%= admin_icon(:search) %><input type="search" placeholder="Поиск по категориям" data-table-filters-target="search" data-action="input->table-filters#apply"></label>
       <label class="filter-control"><span>Дата добавления</span><select data-table-filters-target="date" data-action="change->table-filters#apply"><option value="newest">Сначала новые</option><option value="oldest">Сначала старые</option></select></label>
@@ -10,12 +11,12 @@
       <%= render "admin/shared/column_picker", columns: [["name", "Категория", true], ["access", "Доступ", false], ["articles", "Статей", false], ["date", "Дата добавления", false]] %>
     </div>
     <div class="collection-table-card">
-      <div class="collection-summary"><span>Всего: <strong><%= @categories.size %></strong></span><span>Опубликовано: <strong><%= @categories.count(&:published?) %></strong></span><span>Не опубликовано: <strong><%= @categories.count(&:draft?) %></strong></span></div>
+      <%= render "admin/shared/collection_toolbar", create_path: new_admin_category_path, summary_items: [["Всего", @collection_total], ["Опубликовано", @published_count], ["Не опубликовано", @draft_count]] %>
       <div class="collection-scroll"><table class="collection-table"><thead><tr><th class="check-cell"><input type="checkbox"></th><th data-column="status" data-fixed-column data-fixed-position="left" class="state-column">Состояние</th><th data-column="name">Категория</th><th data-column="access">Доступ</th><th data-column="articles">Статей</th><th data-column="date">Дата добавления</th><th data-column="id" data-fixed-column data-fixed-position="right" class="id-column">ID</th></tr></thead><tbody>
         <% if @categories.any? %><% @categories.each do |category| %><tr data-table-filters-target="row" data-search="<%= [category.rendered_name, category.slug].join(" ") %>" data-name="<%= category.rendered_name %>" data-status="<%= category.status %>" data-type="category" data-date="<%= category.created_at.to_i %>"><td class="check-cell"><input type="checkbox"></td><td data-column="status" data-fixed-column data-fixed-position="left" class="state-column"><%= admin_state_indicator(category) %></td><td data-column="name" class="entity-title-cell"><%= link_to category.rendered_name, edit_admin_category_path(category), class: "table-primary entity-primary-link" %><span class="entity-meta"><span class="entity-meta-label">Алиас:</span> <%= category.slug %></span></td><td data-column="access"><span class="access-badge is-<%= category.visibility %>"><%= admin_access_label(category) %></span></td><td data-column="articles"><%= link_to category.articles_count, admin_articles_path(category: category.id), class: "count-chip count-chip-link", title: "Показать статьи категории #{category.rendered_name}" %></td><td data-column="date" class="material-date"><%= category.created_at.strftime("%d.%m.%Y") %></td><td data-column="id" data-fixed-column data-fixed-position="right" class="id-column id-value"><%= category.id %></td></tr><% end %>
         <% else %><tr><td colspan="7"><%= render "admin/shared/empty_collection", icon: :folder, title: "Категорий пока нет", text: "Здесь появятся созданные категории." %></td></tr><% end %>
       </tbody></table></div>
-      <div class="collection-footer"><span><span data-table-filters-target="shown">Показано <%= @categories.size %> из <%= @categories.size %></span> категорий</span></div>
+      <%= render "admin/shared/collection_pagination", item_name: "категорий" %>
     </div>
   </section>
 </div>

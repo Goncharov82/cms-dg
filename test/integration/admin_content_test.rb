@@ -17,12 +17,66 @@ class AdminContentTest < ActionDispatch::IntegrationTest
       get path
       assert_response :success
       assert_select "h1", heading
+      unless path == admin_analytics_path
+        assert_select "header.admin-topbar h1.admin-topbar-title", heading
+        assert_select "header.admin-topbar .admin-topbar-title-icon svg", count: 1
+        assert_select ".page-heading", count: 0
+        assert_select ".collection-actions-bar" do
+          assert_select "a.collection-create-button", text: "Создать"
+          assert_select "select[aria-label='Действие'][disabled] option", text: "Действие"
+          assert_select "button", text: "Применить", count: 0
+        end
+        assert_select "select[aria-label='Количество элементов на странице']" do
+          assert_select "option", text: "20"
+          assert_select "option", text: "50"
+          assert_select "option", text: "100"
+          assert_select "option", text: "500"
+          assert_select "option[value='all']", text: "Все"
+        end
+      end
     end
 
     get admin_categories_path
     assert_select "th[data-column='access']", "Доступ"
     assert_no_match(/\{\d+\s*=>/, response.body)
     assert_select "button.sidebar-collapse-control[data-action='sidebar#toggleCollapsed']", text: "Скрыть меню"
+    assert_select ".collection-summary", count: 0
+    assert_select ".collection-actions-bar" do
+      assert_select ".collection-action-summary", text: /Всего:.*Опубликовано:.*Не опубликовано:/m
+      assert_select ".collection-page-size select[aria-label='Количество элементов на странице']"
+    end
+
+    get admin_root_path
+    assert_response :success
+    assert_select "header.admin-topbar h1.admin-topbar-title", "Дашборд"
+    assert_select "header.admin-topbar .admin-topbar-title-icon svg", count: 1
+    assert_select ".page-heading", count: 0
+    assert_select ".page-date", count: 0
+  end
+
+  test "administrator can change page size and navigate collection pages" do
+    21.times do |index|
+      Article.create!(title: "Материал пагинации #{index + 1}", body: "Текст", status: :published)
+    end
+
+    get admin_articles_path
+    assert_response :success
+    assert_select "tbody tr[data-table-filters-target='row']", count: 20
+    assert_select ".collection-footer", text: /Показано 1–20 из 21 статей/
+    assert_select ".admin-pagination__page.is-active", text: "1"
+    assert_select "a.admin-pagination__page[href*='page=2']", text: "2"
+
+    get admin_articles_path, params: { page: 2, per_page: 20 }
+    assert_response :success
+    assert_select "tbody tr[data-table-filters-target='row']", count: 1
+    assert_select ".collection-footer", text: /Показано 21–21 из 21 статей/
+    assert_select ".admin-pagination__page.is-active", text: "2"
+
+    get admin_articles_path, params: { per_page: "all" }
+    assert_response :success
+    assert_select "tbody tr[data-table-filters-target='row']", count: 21
+    assert_select "select[aria-label='Количество элементов на странице'] option[value='all'][selected]", text: "Все"
+    assert_select ".admin-pagination", count: 0
   end
 
   test "content tables show state icons, entity IDs, and article views" do
@@ -38,6 +92,9 @@ class AdminContentTest < ActionDispatch::IntegrationTest
     }.each do |path, (id, published)|
       get path
       assert_response :success
+      assert_select "section[data-controller~='table-selection']"
+      assert_select "thead .check-cell input[type='checkbox']", count: 1
+      assert_select "tbody .check-cell input[type='checkbox']", minimum: 1
       assert_select "th[data-column='status']", text: "Состояние"
       assert_select "th[data-column='id']", text: "ID"
       assert_select "td[data-column='id']", text: id.to_s
@@ -51,6 +108,10 @@ class AdminContentTest < ActionDispatch::IntegrationTest
     get admin_pages_path
     assert_select "th[data-column='views'][data-fixed-column][data-fixed-position='right']", text: "Просмотры"
     assert_select "td[data-column='views'] .views-count", text: "87"
+    assert_select "td[data-column='name'].entity-title-cell" do
+      assert_select "a.entity-primary-link", text: page.title
+      assert_select ".entity-meta", text: /Алиас:\s*#{Regexp.escape(page.slug)}/
+    end
 
     get admin_categories_path
     assert_select "td[data-column='name'].entity-title-cell" do
@@ -60,6 +121,13 @@ class AdminContentTest < ActionDispatch::IntegrationTest
     end
 
     get admin_site_menu_path
+    assert_select ".menu-selector-row", count: 0
+    assert_select ".menu-count", count: 0
+    assert_select "button", text: "Создать меню", count: 0
+    assert_select ".collection-summary", text: /Меню: Главное меню|Область: Шапка сайта/, count: 0
+    assert_select ".collection-actions-bar .collection-page-size select[aria-label='Количество элементов на странице']"
+    assert_select ".collection-action-summary", count: 0
+    assert_select ".collection-footer", count: 0
     assert_select "th[data-column='target']", count: 0
     assert_select "th[data-column='url']", count: 0
     assert_select "td[data-column='name'].entity-title-cell" do
@@ -73,6 +141,9 @@ class AdminContentTest < ActionDispatch::IntegrationTest
 
     get admin_articles_path
     assert_response :success
+    assert_select "section[data-controller~='table-selection']"
+    assert_select "thead .check-cell input[type='checkbox']", count: 1
+    assert_select "tbody .check-cell input[type='checkbox']", minimum: 1
     assert_select "th[data-column='status']", text: "Состояние"
     assert_select "th[data-column='views'][data-fixed-column][data-fixed-position='right']", text: "Просмотры"
     assert_select "td[data-column='views'] .views-count", text: "321"
@@ -227,10 +298,13 @@ class AdminContentTest < ActionDispatch::IntegrationTest
     assert_predicate Category.last, :draft?
   end
 
-  test "admin shell has nested articles navigation and theme controls" do
+  test "admin shell has flat content navigation and theme controls" do
     get admin_root_path
     assert_response :success
-    assert_select ".sidebar-group .sidebar-sublink[href='#{admin_articles_path}']", text: /Статьи/
+    assert_select "nav.sidebar-nav > a.sidebar-link[href='#{admin_categories_path}']", text: /Категории/
+    assert_select "nav.sidebar-nav > a.sidebar-link[href='#{admin_articles_path}']", text: /Статьи/
+    assert_select ".sidebar-group", count: 0
+    assert_select ".sidebar-sublink", count: 0
     assert_select "button[aria-label='Включить светлую тему']"
     assert_select "button[aria-label='Включить тёмную тему']"
     assert_select "a.open-site-link[target='_blank'][rel='noopener'][href='#{root_path}']", text: /Открыть сайт/
@@ -257,21 +331,31 @@ class AdminContentTest < ActionDispatch::IntegrationTest
       error: nil
     }
 
-    Rails.cache.write(TiptapReleaseChecker::CACHE_KEY, tiptap_release, expires_in: 1.hour)
-    Rails.cache.write(CodeMirrorReleaseChecker::CACHE_KEY, codemirror_release, expires_in: 1.hour)
+    original_tiptap_call = TiptapReleaseChecker.method(:call)
+    original_codemirror_call = CodeMirrorReleaseChecker.method(:call)
+    TiptapReleaseChecker.define_singleton_method(:call) { |**| tiptap_release }
+    CodeMirrorReleaseChecker.define_singleton_method(:call) { |**| codemirror_release }
     begin
       get admin_settings_path
       assert_response :success
       assert_select "h1", "Настройки CMS"
+      assert_select "header.admin-topbar h1.admin-topbar-title", "Настройки CMS"
+      assert_select "header.admin-topbar .admin-topbar-title-icon svg", count: 1
+      assert_select ".page-heading", count: 0
       assert_select "input[placeholder='Поиск по настройкам']"
       assert_select ".settings-overview-card", count: 12
       assert_select ".component-update-row", text: /Tiptap Editor/
       assert_select ".component-update-row", text: /CodeMirror/
       assert_select ".update-status.is-current", text: "Актуальная версия", minimum: 1
       assert_select "form[action='#{admin_settings_check_updates_path}'] button", text: "Проверить обновление", count: 2
+      assert_select "#general-settings form[action='#{admin_settings_path}'][method='post']" do
+        assert_select "input[name='_method'][value='patch']"
+        assert_select "input[name='site_disabled'][type='checkbox']"
+        assert_select ".settings-site-switch", text: /Сайт доступен/
+      end
     ensure
-      Rails.cache.delete(TiptapReleaseChecker::CACHE_KEY)
-      Rails.cache.delete(CodeMirrorReleaseChecker::CACHE_KEY)
+      TiptapReleaseChecker.define_singleton_method(:call, original_tiptap_call)
+      CodeMirrorReleaseChecker.define_singleton_method(:call, original_codemirror_call)
     end
   end
 
@@ -283,6 +367,7 @@ class AdminContentTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "a.material-title[href='#{edit_admin_article_path(article)}']", text: article.title
     assert_select "a[href='#{admin_article_path(article)}']", count: 0
+    assert_select ".all-materials-link", count: 0
   end
 
   test "article editor has a public preview link" do
@@ -328,6 +413,8 @@ class AdminContentTest < ActionDispatch::IntegrationTest
     assert_select ".editor-actions .admin-button", text: "Сохранить черновик"
     assert_select ".editor-actions .admin-button", text: "Сохранить"
     assert_select "button", text: "Сформировать", count: 0
+    assert_select ".menu-item-sidebar-stack .form-field > label", text: "Меню", count: 0
+    assert_select ".menu-item-sidebar-stack h2", text: "Расположение"
     assert_select ".menu-preview", count: 0
 
     assert_difference("MenuItem.count") do

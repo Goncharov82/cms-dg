@@ -5,8 +5,11 @@ module Admin
     def index
       @categories = content_scope(Category).order(:name)
       @selected_category = @categories.find_by(id: params[:category]) if params[:category].present?
-      @articles = content_scope(Article).includes(:category).recent_first
-      @articles = @articles.where(category: @selected_category) if @selected_category
+      scope = content_scope(Article).includes(:category).recent_first
+      scope = scope.where(category: @selected_category) if @selected_category
+      @published_count = scope.where(status: :published).count
+      @draft_count = scope.where(status: :draft).count
+      @articles = paginate_collection(scope)
     end
 
     def new

@@ -13,15 +13,8 @@
       <%= admin_icon(:eye, class_name: "sidebar-icon") %><span data-sidebar-target="collapseLabel">Скрыть меню</span>
     </button>
     <%= render "admin/shared/nav_item", label: "Дашборд", icon: :dashboard, path: admin_root_path %>
-    <div class="sidebar-group" data-controller="nav-group" data-nav-group-open-value="<%= request.path.start_with?(admin_categories_path) || request.path.start_with?(admin_articles_path) %>">
-      <div class="sidebar-group-row <%= request.path.start_with?(admin_categories_path) ? "is-active" : "" %>">
-        <%= link_to admin_categories_path, class: "sidebar-group-link", title: "Категории" do %><%= admin_icon(:folder, class_name: "sidebar-icon") %><span>Категории</span><% end %>
-        <button type="button" class="sidebar-group-toggle" data-action="nav-group#toggle" aria-label="Свернуть или развернуть раздел"><span data-nav-group-target="chevron"><%= admin_icon(:chevron_down, class_name: "sidebar-chevron") %></span></button>
-      </div>
-      <div class="sidebar-submenu" data-nav-group-target="items">
-        <%= link_to admin_articles_path, class: "sidebar-sublink #{request.path.start_with?(admin_articles_path) ? "is-active" : ""}", title: "Статьи" do %><%= admin_icon(:articles, class_name: "sidebar-icon") %><span>Статьи</span><% end %>
-      </div>
-    </div>
+    <%= render "admin/shared/nav_item", label: "Категории", icon: :folder, path: admin_categories_path %>
+    <%= render "admin/shared/nav_item", label: "Статьи", icon: :articles, path: admin_articles_path %>
     <%= render "admin/shared/nav_item", label: "Страницы", icon: :page, path: admin_pages_path %>
     <%= render "admin/shared/nav_item", label: "Меню сайта", icon: :menu, path: admin_site_menu_path %>
     <%= render "admin/shared/nav_item", label: "Медиафайлы", icon: :image %>

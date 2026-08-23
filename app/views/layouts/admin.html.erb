@@ -17,7 +17,14 @@
           <button type="button" class="mobile-menu-button" data-action="sidebar#open" aria-label="Открыть меню">
             <%= admin_icon(:menu) %>
           </button>
-          <span class="mobile-brand">DG CMS</span>
+          <% if content_for?(:admin_section_title) %>
+            <h1 class="admin-topbar-title">
+              <% if content_for?(:admin_section_icon) %><span class="admin-topbar-title-icon"><%= content_for(:admin_section_icon) %></span><% end %>
+              <span><%= content_for(:admin_section_title) %></span>
+            </h1>
+          <% else %>
+            <span class="mobile-brand">DG CMS</span>
+          <% end %>
 
           <%= link_to root_path, class: "open-site-link", target: "_blank", rel: "noopener", aria: { label: "Открыть главную страницу сайта в новой вкладке" } do %>
             <span>Открыть сайт</span><%= admin_icon(:external) %>

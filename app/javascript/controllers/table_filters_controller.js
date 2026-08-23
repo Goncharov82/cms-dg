@@ -38,7 +38,15 @@ export default class extends Controller {
     if (body) sorted.forEach((row) => body.appendChild(row))
     const visible = rows.filter((row) => !row.hidden).length
     this.renderNoResults(body, rows.length > 0 && visible === 0)
-    if (this.hasShownTarget) this.shownTarget.textContent = `Показано ${visible} из ${rows.length}`
+    if (this.hasShownTarget) {
+      const total = Number(this.shownTarget.dataset.total || rows.length)
+      const pageStart = Number(this.shownTarget.dataset.pageStart || (visible ? 1 : 0))
+      const pageEnd = Number(this.shownTarget.dataset.pageEnd || visible)
+      const filtered = query.length > 0 || status !== "all" || type !== "all"
+      this.shownTarget.textContent = filtered ? `Показано ${visible} из ${total}` : `Показано ${pageStart}–${pageEnd} из ${total}`
+    }
+
+    this.application.getControllerForElementAndIdentifier(this.element, "table-selection")?.sync()
   }
 
   renderActiveFilters({ query, status, type }) {
@@ -75,6 +83,14 @@ export default class extends Controller {
     } else {
       url.searchParams.set("category", event.currentTarget.value)
     }
+    if (window.Turbo) window.Turbo.visit(url.toString())
+    else window.location.assign(url.toString())
+  }
+
+  changePerPage(event) {
+    const url = new URL(window.location.href)
+    url.searchParams.set("per_page", event.currentTarget.value)
+    url.searchParams.delete("page")
     if (window.Turbo) window.Turbo.visit(url.toString())
     else window.location.assign(url.toString())
   }

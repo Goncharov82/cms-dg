@@ -35,8 +35,8 @@ export default class extends Controller {
 
   renderDesktopState() {
     if (!this.desktop) {
-      this.element.classList.remove("sidebar-collapsed")
-      this.updateCollapseControl(false)
+      this.element.classList.add("sidebar-collapsed")
+      this.updateCollapseControl(true)
       return
     }
     let collapsed = false

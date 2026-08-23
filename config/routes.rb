@@ -20,7 +20,7 @@ Rails.application.routes.draw do
       patch :toggle_status, on: :member
     end
     resource :analytics, only: :show
-    resource :settings, only: :show
+    resource :settings, only: %i[show update]
     post "settings/check_updates", to: "settings#check_updates", as: :settings_check_updates
   end
 
