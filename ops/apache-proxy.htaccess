@@ -1,0 +1,9 @@
+RewriteEngine On
+DirectoryIndex disabled
+
+# Keep certificate validation files served directly by the hosting account.
+RewriteRule ^\.well-known/acme-challenge/ - [L]
+
+# Forward the public test domain to the Rails container on the loopback port.
+RewriteRule ^$ http://127.0.0.1:3090/ [P,L,NE]
+RewriteRule ^(.*)$ http://127.0.0.1:3090/$1 [P,L,NE]
