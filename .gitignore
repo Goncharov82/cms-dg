@@ -2,6 +2,7 @@
 /.env
 /.env.*
 !/.env.example
+!/.env.production.example
 /config/master.key
 /config/credentials/*.key
 /log/*
@@ -19,5 +20,6 @@
 /public/assets
 /node_modules
 /.kamal/secrets
+/ops/*.local
 # Старый Joomla-сайт для миграции
 /legacy_source/

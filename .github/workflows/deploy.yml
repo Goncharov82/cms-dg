@@ -1,0 +1,107 @@
+name: Deploy production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  SERVER_HOST: 78.24.217.140
+  SERVER_PORT: "22"
+  SERVER_USER: deploy
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
+
+jobs:
+  test-build-deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    services:
+      postgres:
+        image: postgres:18.4
+        env:
+          POSTGRES_DB: goncharoff_pro_test
+          POSTGRES_USER: goncharoff
+          POSTGRES_PASSWORD: test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U goncharoff -d goncharoff_pro_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Build test image
+        run: docker build --target development --tag cms-dg:test .
+
+      - name: Run Rails tests
+        run: >-
+          docker run --rm --network host
+          -e RAILS_ENV=test
+          -e DATABASE_HOST=127.0.0.1
+          -e DATABASE_PORT=5432
+          -e DATABASE_USERNAME=goncharoff
+          -e DATABASE_PASSWORD=test_password
+          cms-dg:test
+          bin/rails db:prepare test
+
+      - name: Normalize image name
+        id: image
+        shell: bash
+        run: echo "name=${IMAGE_NAME,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
+
+      - name: Build and push production image
+        env:
+          IMAGE: ${{ steps.image.outputs.name }}:${{ github.sha }}
+        run: |
+          docker build \
+            --label "org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}" \
+            --label "org.opencontainers.image.revision=${{ github.sha }}" \
+            --tag "$IMAGE" \
+            .
+          docker push "$IMAGE"
+
+      - name: Configure SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/cms_dg_deploy
+          chmod 600 ~/.ssh/cms_dg_deploy
+          printf '%s\n' '78.24.217.140 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINTub0ZDAUw2Gc2MOWbHGpjZY4hJ91QR4UU6mjvEwBAr' > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Upload deployment configuration
+        run: |
+          scp -P "$SERVER_PORT" -i ~/.ssh/cms_dg_deploy \
+            compose.production.yaml ops/deploy.sh \
+            "$SERVER_USER@$SERVER_HOST:/opt/cms-dg/"
+
+      - name: Pull image and deploy
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE: ${{ steps.image.outputs.name }}:${{ github.sha }}
+        run: |
+          printf '%s' "$GHCR_TOKEN" | ssh -p "$SERVER_PORT" -i ~/.ssh/cms_dg_deploy \
+            "$SERVER_USER@$SERVER_HOST" \
+            "docker login ghcr.io --username '${{ github.actor }}' --password-stdin"
+          ssh -p "$SERVER_PORT" -i ~/.ssh/cms_dg_deploy \
+            "$SERVER_USER@$SERVER_HOST" \
+            "chmod 700 /opt/cms-dg/deploy.sh && /opt/cms-dg/deploy.sh '$IMAGE'"
