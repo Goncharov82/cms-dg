@@ -18,6 +18,7 @@ readonly SERVICE_NAME="test-goncharoff-pro.service"
 readonly HEALTH_URL="http://127.0.0.1:3090/up"
 
 export PATH="/opt/ruby/bin:/usr/lib/postgresql/18/bin:${PATH}"
+export LD_LIBRARY_PATH="/opt/libvips/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 export RAILS_ENV=production
 export BUNDLE_DEPLOYMENT=true
