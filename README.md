@@ -109,3 +109,5 @@ docker compose exec app bin/brakeman --no-pager
 Production разворачивается GitHub Actions на сервер `78.24.217.140` после успешных тестов при каждом push в `main`. PostgreSQL и Active Storage используют постоянные Docker volumes, а перед переключением приложения создаётся дамп всех PostgreSQL-баз.
 
 Конфигурация находится в `compose.production.yaml`, workflow — в `.github/workflows/deploy.yml`, серверные сценарии — в `ops/`. Деплой выполняется rootless Docker от имени `test.goncharoff.pro` в `~/app`; реальный `~/app/shared/.env`, SSH-ключи и Rails master key в репозиторий не добавляются.
+
+Публичный vhost ISPmanager передаёт запросы из `/www/test.goncharoff.pro/` приложению на `127.0.0.1:3090` через правила `ops/apache-proxy.htaccess`. Стандартная заглушка ISPmanager сохранена на сервере как `index.html.ispmanager-placeholder` для быстрого отката.
