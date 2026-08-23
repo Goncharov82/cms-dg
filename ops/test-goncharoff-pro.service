@@ -1,0 +1,25 @@
+[Unit]
+Description=test.goncharoff.pro Rails application
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/site/current
+EnvironmentFile=%h/site/shared/.env
+Environment=PATH=/opt/ruby/bin:/usr/lib/postgresql/18/bin:/usr/local/bin:/usr/bin:/bin
+Environment=LD_LIBRARY_PATH=/opt/libvips/lib
+Environment=RAILS_ENV=production
+Environment=RAILS_SERVE_STATIC_FILES=true
+Environment=SOLID_QUEUE_IN_PUMA=true
+Environment=BUNDLE_DEPLOYMENT=true
+Environment=BUNDLE_WITHOUT=development:test
+ExecStart=/opt/ruby/bin/bundle exec rails server --binding 127.0.0.1
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+KillSignal=SIGTERM
+SyslogIdentifier=test-goncharoff-pro
+
+[Install]
+WantedBy=default.target

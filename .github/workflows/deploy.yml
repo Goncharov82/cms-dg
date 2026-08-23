@@ -11,17 +11,15 @@ concurrency:
 
 permissions:
   contents: read
-  packages: write
 
 env:
   SERVER_HOST: 78.24.217.140
   SERVER_PORT: "22"
   SERVER_USER: test.goncharoff.pro
   DEPLOY_ROOT: /var/www/test.goncharoff.pro/data/app
-  IMAGE_NAME: ghcr.io/${{ github.repository }}
 
 jobs:
-  test-build-deploy:
+  test-and-deploy:
     runs-on: ubuntu-latest
     environment: production
 
@@ -40,44 +38,30 @@ jobs:
           --health-timeout 5s
           --health-retries 12
 
+    env:
+      RAILS_ENV: test
+      DATABASE_HOST: 127.0.0.1
+      DATABASE_PORT: "5432"
+      DATABASE_USERNAME: goncharoff
+      DATABASE_PASSWORD: test_password
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
 
-      - name: Build test image
-        run: docker build --target development --tag test-goncharoff-pro:test .
+      - name: Install image library
+        run: sudo apt-get update && sudo apt-get install -y libvips-tools
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
 
       - name: Run Rails tests
-        run: >-
-          docker run --rm --network host
-          -e RAILS_ENV=test
-          -e DATABASE_HOST=127.0.0.1
-          -e DATABASE_PORT=5432
-          -e DATABASE_USERNAME=goncharoff
-          -e DATABASE_PASSWORD=test_password
-          test-goncharoff-pro:test
-          bin/rails db:prepare test
+        run: bin/rails db:prepare test
 
-      - name: Normalize image name
-        id: image
-        shell: bash
-        run: echo "name=${IMAGE_NAME,,}" >> "$GITHUB_OUTPUT"
-
-      - name: Log in to GitHub Container Registry
-        env:
-          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
-
-      - name: Build and push production image
-        env:
-          IMAGE: ${{ steps.image.outputs.name }}:${{ github.sha }}
-        run: |
-          docker build \
-            --label "org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}" \
-            --label "org.opencontainers.image.revision=${{ github.sha }}" \
-            --tag "$IMAGE" \
-            .
-          docker push "$IMAGE"
+      - name: Create release archive
+        run: git archive --format=tar.gz --output="release-${GITHUB_SHA}.tar.gz" HEAD
 
       - name: Configure SSH
         env:
@@ -89,20 +73,24 @@ jobs:
           printf '%s\n' '78.24.217.140 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINTub0ZDAUw2Gc2MOWbHGpjZY4hJ91QR4UU6mjvEwBAr' > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
-      - name: Upload deployment configuration
+      - name: Upload release
         run: |
-          scp -P "$SERVER_PORT" -i ~/.ssh/test_goncharoff_pro_deploy \
-            compose.production.yaml ops/deploy.sh \
-            "$SERVER_USER@$SERVER_HOST:$DEPLOY_ROOT/"
-
-      - name: Pull image and deploy
-        env:
-          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IMAGE: ${{ steps.image.outputs.name }}:${{ github.sha }}
-        run: |
-          printf '%s' "$GHCR_TOKEN" | ssh -p "$SERVER_PORT" -i ~/.ssh/test_goncharoff_pro_deploy \
-            "$SERVER_USER@$SERVER_HOST" \
-            "XDG_RUNTIME_DIR=/run/user/1082 DOCKER_HOST=unix:///run/user/1082/docker.sock docker login ghcr.io --username '${{ github.actor }}' --password-stdin"
           ssh -p "$SERVER_PORT" -i ~/.ssh/test_goncharoff_pro_deploy \
             "$SERVER_USER@$SERVER_HOST" \
-            "chmod 700 '$DEPLOY_ROOT/deploy.sh' && DEPLOY_ROOT='$DEPLOY_ROOT' '$DEPLOY_ROOT/deploy.sh' '$IMAGE'"
+            "mkdir -p '$DEPLOY_ROOT/incoming'"
+          scp -P "$SERVER_PORT" -i ~/.ssh/test_goncharoff_pro_deploy \
+            "release-${GITHUB_SHA}.tar.gz" \
+            "$SERVER_USER@$SERVER_HOST:$DEPLOY_ROOT/incoming/"
+          scp -P "$SERVER_PORT" -i ~/.ssh/test_goncharoff_pro_deploy \
+            ops/native-deploy.sh \
+            "$SERVER_USER@$SERVER_HOST:$DEPLOY_ROOT/native-deploy.sh"
+
+      - name: Deploy release
+        run: |
+          ssh -p "$SERVER_PORT" -i ~/.ssh/test_goncharoff_pro_deploy \
+            "$SERVER_USER@$SERVER_HOST" \
+            "chmod 700 '$DEPLOY_ROOT/native-deploy.sh' && \
+             APP_ROOT='/var/www/test.goncharoff.pro/data/site' \
+             '$DEPLOY_ROOT/native-deploy.sh' \
+             '${GITHUB_SHA}' \
+             '$DEPLOY_ROOT/incoming/release-${GITHUB_SHA}.tar.gz'"
