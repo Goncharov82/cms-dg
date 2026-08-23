@@ -1,0 +1,8 @@
+<label class="collection-page-size">
+  <span>Показывать</span>
+  <select aria-label="Количество элементов на странице" data-action="change->table-filters#changePerPage">
+    <% [["20", "20"], ["50", "50"], ["100", "100"], ["500", "500"], ["Все", "all"]].each do |label, value| %>
+      <option value="<%= value %>" <%= "selected" if @per_page == value %>><%= label %></option>
+    <% end %>
+  </select>
+</label>

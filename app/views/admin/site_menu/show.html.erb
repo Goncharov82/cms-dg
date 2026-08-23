@@ -1,7 +1,76 @@
 <% content_for :title, "Меню сайта — DG CMS" %>
-<div class="admin-container"><div class="page-heading"><div><p class="page-eyebrow">Навигация</p><h1>Меню сайта</h1></div><%= link_to new_admin_menu_item_path, class: "admin-button is-primary" do %><%= admin_icon(:plus) %><span>Добавить пункт</span><% end %></div>
-  <div class="menu-selector-row"><label><span>Выберите меню</span><select disabled><option>Главное меню</option></select></label><button class="admin-button" disabled><%= admin_icon(:plus) %>Создать меню</button><span class="menu-count">0 пунктов</span></div>
-  <section class="collection-panel menu-collection" data-controller="table-columns table-filters" data-table-columns-key-value="site-menu"><div class="filter-row"><label class="filter-search"><%= admin_icon(:search) %><input type="search" placeholder="Поиск по пунктам" data-table-filters-target="search" data-action="input->table-filters#apply"></label><label class="filter-control"><span>Тип ссылки</span><select data-table-filters-target="type" data-action="change->table-filters#apply"><option value="all">Все типы</option><option value="page">Страница</option><option value="category">Категория</option><option value="article">Статья</option><option value="external">Внешняя ссылка</option></select></label><label class="filter-control"><span>Состояние</span><select data-table-filters-target="status" data-action="change->table-filters#apply"><option value="all">Все</option><option value="published">Опубликованные</option><option value="draft">Не опубликованные</option></select></label><%= render "admin/shared/column_picker", columns: [["name", "Название", true], ["type", "Тип", false], ["opening", "Открытие", false], ["access", "Доступ", false]] %><button class="admin-button" disabled><%= admin_icon(:save) %>Сохранить порядок</button></div>
-    <div class="collection-summary"><span>Меню: Главное меню</span><span class="status-badge <%= @menu_items.any? ? "is-published" : "is-draft" %>"><%= @menu_items.any? ? "Настроено" : "Не настроено" %></span><span>Область: Шапка сайта</span></div><div class="collection-scroll"><table class="collection-table"><thead><tr><th data-column="status" data-fixed-column data-fixed-position="left" class="state-column">Состояние</th><th data-column="name">Название</th><th data-column="type">Тип</th><th data-column="opening">Открытие</th><th data-column="access">Доступ</th><th data-column="id" data-fixed-column data-fixed-position="right" class="id-column">ID</th></tr></thead><tbody><% if @menu_items.any? %><% @menu_items.each do |item| %><tr data-table-filters-target="row" data-search="<%= [item.rendered_label, item.slug, item.target_label, item.url].compact.join(" ") %>" data-name="<%= item.rendered_label %>" data-status="<%= item.status %>" data-type="<%= item.item_type %>" data-date="<%= item.created_at.to_i %>"><td data-column="status" data-fixed-column data-fixed-position="left" class="state-column"><%= admin_state_indicator(item) %></td><td data-column="name" class="entity-title-cell"><%= link_to item.rendered_label, edit_admin_menu_item_path(item), class: "table-primary entity-primary-link" %><span class="entity-meta"><span class="entity-meta-label">Алиас:</span> <%= item.slug %></span><span class="entity-meta"><%= admin_menu_item_binding(item) %></span></td><td data-column="type"><%= {"page"=>"Страница","category"=>"Категория","article"=>"Статья","external"=>"Внешняя ссылка"}[item.item_type] %></td><td data-column="opening"><%= item.open_new_tab? ? "В новом окне" : "В текущем окне" %></td><td data-column="access"><span class="access-badge is-<%= item.visibility %>"><%= admin_access_label(item) %></span></td><td data-column="id" data-fixed-column data-fixed-position="right" class="id-column id-value"><%= item.id %></td></tr><% end %><% else %><tr><td colspan="6"><%= render "admin/shared/empty_collection", icon: :menu, title: "Пунктов меню пока нет", text: "Добавьте первый пункт — он появится в этом списке." %></td></tr><% end %></tbody></table></div><div class="collection-footer"><span><span data-table-filters-target="shown">Показано <%= @menu_items.size %> из <%= @menu_items.size %></span> пунктов</span><span>Порядок можно менять перетаскиванием</span></div>
+<% content_for :admin_section_title, "Меню сайта" %>
+<% content_for :admin_section_icon do %><%= admin_icon(:menu) %><% end %>
+
+<div class="admin-container">
+  <section class="collection-panel menu-collection" data-controller="table-columns table-filters table-selection" data-table-columns-key-value="site-menu">
+    <div class="filter-row">
+      <label class="filter-search">
+        <%= admin_icon(:search) %>
+        <input type="search" placeholder="Поиск по пунктам" data-table-filters-target="search" data-action="input->table-filters#apply">
+      </label>
+      <label class="filter-control">
+        <span>Тип ссылки</span>
+        <select data-table-filters-target="type" data-action="change->table-filters#apply">
+          <option value="all">Все типы</option>
+          <option value="page">Страница</option>
+          <option value="category">Категория</option>
+          <option value="article">Статья</option>
+          <option value="external">Внешняя ссылка</option>
+        </select>
+      </label>
+      <label class="filter-control">
+        <span>Состояние</span>
+        <select data-table-filters-target="status" data-action="change->table-filters#apply">
+          <option value="all">Все</option>
+          <option value="published">Опубликованные</option>
+          <option value="draft">Не опубликованные</option>
+        </select>
+      </label>
+      <%= render "admin/shared/column_picker", columns: [["name", "Название", true], ["type", "Тип", false], ["opening", "Открытие", false], ["access", "Доступ", false]] %>
+      <button class="admin-button" disabled><%= admin_icon(:save) %>Сохранить порядок</button>
+    </div>
+
+    <%= render "admin/shared/collection_toolbar", create_path: new_admin_menu_item_path %>
+
+    <div class="collection-scroll">
+      <table class="collection-table">
+        <thead>
+          <tr>
+            <th class="check-cell"><input type="checkbox" aria-label="Выбрать все пункты меню"></th>
+            <th data-column="status" data-fixed-column data-fixed-position="left" class="state-column">Состояние</th>
+            <th data-column="name">Название</th>
+            <th data-column="type">Тип</th>
+            <th data-column="opening">Открытие</th>
+            <th data-column="access">Доступ</th>
+            <th data-column="id" data-fixed-column data-fixed-position="right" class="id-column">ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @menu_items.any? %>
+            <% @menu_items.each do |item| %>
+              <tr data-table-filters-target="row" data-search="<%= [item.rendered_label, item.slug, item.target_label, item.url].compact.join(" ") %>" data-name="<%= item.rendered_label %>" data-status="<%= item.status %>" data-type="<%= item.item_type %>" data-date="<%= item.created_at.to_i %>">
+                <td class="check-cell"><input type="checkbox" aria-label="Выбрать пункт меню <%= item.rendered_label %>"></td>
+                <td data-column="status" data-fixed-column data-fixed-position="left" class="state-column"><%= admin_state_indicator(item) %></td>
+                <td data-column="name" class="entity-title-cell">
+                  <%= link_to item.rendered_label, edit_admin_menu_item_path(item), class: "table-primary entity-primary-link" %>
+                  <span class="entity-meta"><span class="entity-meta-label">Алиас:</span> <%= item.slug %></span>
+                  <span class="entity-meta"><%= admin_menu_item_binding(item) %></span>
+                </td>
+                <td data-column="type"><%= {"page" => "Страница", "category" => "Категория", "article" => "Статья", "external" => "Внешняя ссылка"}[item.item_type] %></td>
+                <td data-column="opening"><%= item.open_new_tab? ? "В новом окне" : "В текущем окне" %></td>
+                <td data-column="access"><span class="access-badge is-<%= item.visibility %>"><%= admin_access_label(item) %></span></td>
+                <td data-column="id" data-fixed-column data-fixed-position="right" class="id-column id-value"><%= item.id %></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="7"><%= render "admin/shared/empty_collection", icon: :menu, title: "Пунктов меню пока нет", text: "Добавьте первый пункт — он появится в этом списке." %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <%= render "admin/shared/collection_pagination", item_name: "пунктов", show_count: false %>
   </section>
 </div>

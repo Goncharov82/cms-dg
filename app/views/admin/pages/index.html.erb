@@ -1,19 +1,35 @@
 <% content_for :title, "Страницы — DG CMS" %>
+<% content_for :admin_section_title, "Страницы" %>
+<% content_for :admin_section_icon do %><%= admin_icon(:page) %><% end %>
 <div class="admin-container">
-  <div class="page-heading"><div><p class="page-eyebrow">Контент</p><h1>Страницы</h1></div><%= link_to new_admin_page_path, class: "admin-button is-primary" do %><%= admin_icon(:plus) %><span>Добавить страницу</span><% end %></div>
-  <section class="collection-panel" data-controller="table-columns table-filters" data-table-columns-key-value="pages">
+  <section class="collection-panel" data-controller="table-columns table-filters table-selection" data-table-columns-key-value="pages">
     <div class="filter-row"><label class="filter-search"><%= admin_icon(:search) %><input type="search" placeholder="Поиск по страницам" data-table-filters-target="search" data-action="input->table-filters#apply"></label><label class="filter-control"><span>Дата изменения</span><select data-table-filters-target="date" data-action="change->table-filters#apply"><option value="newest">Сначала новые</option><option value="oldest">Сначала старые</option></select></label><label class="filter-control"><span>Тип страницы</span><select data-table-filters-target="type" data-action="change->table-filters#apply"><option value="all">Все типы</option><option value="custom">Кастомные</option></select></label><label class="filter-control"><span>Состояние</span><select data-table-filters-target="status" data-action="change->table-filters#apply"><option value="all">Все</option><option value="published">Опубликованные</option><option value="draft">Не опубликованные</option></select></label><%= render "admin/shared/column_picker", columns: [["name", "Название", true], ["type", "Тип", false], ["url", "URL / Алиас", false], ["access", "Доступ", false], ["author", "Автор", false], ["changed", "Изменено", false]] %></div>
     <div class="collection-table-card">
-      <div class="collection-summary"><span>Всего: <strong><%= @pages.size %></strong></span><span>Опубликовано: <strong><%= @pages.count(&:published?) %></strong></span><span>Черновики: <strong><%= @pages.count(&:draft?) %></strong></span><span>Системные: <strong>0</strong></span></div>
-      <div class="bulk-row"><select disabled><option>Действия с выбранными</option></select><button class="admin-button" disabled>Применить</button></div>
+      <%= render "admin/shared/collection_toolbar", create_path: new_admin_page_path, summary_items: [["Всего", @collection_total], ["Опубликовано", @published_count], ["Не опубликовано", @draft_count], ["Системные", 0]] %>
       <div class="collection-scroll"><table class="collection-table"><thead><tr><th class="check-cell"><input type="checkbox"></th><th data-column="status" data-fixed-column data-fixed-position="left" class="state-column">Состояние</th><th data-column="name">Название</th><th data-column="type">Тип</th><th data-column="url">URL / Алиас</th><th data-column="access">Доступ</th><th data-column="author">Автор</th><th data-column="changed">Изменено</th><th data-column="views" data-fixed-column data-fixed-position="right" class="views-column">Просмотры</th><th data-column="id" data-fixed-column data-fixed-position="right" class="id-column">ID</th></tr></thead><tbody>
         <% if @pages.any? %>
-          <% @pages.each do |page| %><tr data-table-filters-target="row" data-search="<%= [page.rendered_title, page.slug, admin_display_name(current_user)].join(" ") %>" data-name="<%= page.rendered_title %>" data-status="<%= page.status %>" data-type="custom" data-date="<%= page.updated_at.to_i %>"><td class="check-cell"><input type="checkbox"></td><td data-column="status" data-fixed-column data-fixed-position="left" class="state-column"><%= admin_state_indicator(page) %></td><td data-column="name"><%= link_to page.rendered_title, edit_admin_page_path(page), class: "table-primary" %></td><td data-column="type">Кастомная</td><td data-column="url"><code><%= page.slug == "/" ? "/" : "/#{page.slug}" %></code></td><td data-column="access"><span class="access-badge is-<%= page.visibility %>"><%= admin_access_label(page) %></span></td><td data-column="author"><%= admin_display_name(current_user) %></td><td data-column="changed"><%= l(page.updated_at, format: :short) %></td><td data-column="views" data-fixed-column data-fixed-position="right" class="views-column"><span class="views-count"><%= page.views_count %></span></td><td data-column="id" data-fixed-column data-fixed-position="right" class="id-column id-value"><%= page.id %></td></tr><% end %>
+          <% @pages.each do |page| %>
+            <tr data-table-filters-target="row" data-search="<%= [page.rendered_title, page.slug, admin_display_name(current_user)].join(" ") %>" data-name="<%= page.rendered_title %>" data-status="<%= page.status %>" data-type="custom" data-date="<%= page.updated_at.to_i %>">
+              <td class="check-cell"><input type="checkbox" aria-label="Выбрать страницу <%= page.rendered_title %>"></td>
+              <td data-column="status" data-fixed-column data-fixed-position="left" class="state-column"><%= admin_state_indicator(page) %></td>
+              <td data-column="name" class="entity-title-cell">
+                <%= link_to page.rendered_title, edit_admin_page_path(page), class: "table-primary entity-primary-link" %>
+                <span class="entity-meta"><span class="entity-meta-label">Алиас:</span> <%= page.slug == "/" ? "/" : page.slug %></span>
+              </td>
+              <td data-column="type">Кастомная</td>
+              <td data-column="url"><code><%= page.slug == "/" ? "/" : "/#{page.slug}" %></code></td>
+              <td data-column="access"><span class="access-badge is-<%= page.visibility %>"><%= admin_access_label(page) %></span></td>
+              <td data-column="author"><%= admin_display_name(current_user) %></td>
+              <td data-column="changed"><%= l(page.updated_at, format: :short) %></td>
+              <td data-column="views" data-fixed-column data-fixed-position="right" class="views-column"><span class="views-count"><%= page.views_count %></span></td>
+              <td data-column="id" data-fixed-column data-fixed-position="right" class="id-column id-value"><%= page.id %></td>
+            </tr>
+          <% end %>
         <% else %>
           <tr><td colspan="10"><%= render "admin/shared/empty_collection", icon: :page, title: "Страниц пока нет", text: "Создайте первую страницу, чтобы она появилась в этом списке." %></td></tr>
         <% end %>
       </tbody></table></div>
-      <div class="collection-footer"><span><span data-table-filters-target="shown">Показано <%= @pages.size %> из <%= @pages.size %></span> страниц</span></div>
+      <%= render "admin/shared/collection_pagination", item_name: "страниц" %>
     </div>
   </section>
 </div>

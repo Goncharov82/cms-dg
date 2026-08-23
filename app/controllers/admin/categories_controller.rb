@@ -2,7 +2,11 @@ module Admin
   class CategoriesController < BaseController
     before_action :set_category, only: %i[edit update toggle_status]
     def index
-      @categories = content_scope(Category).left_joins(:articles).group(:id).order(:name).select("categories.*, COUNT(articles.id) AS articles_count").to_a
+      base_scope = content_scope(Category)
+      @published_count = base_scope.where(status: :published).count
+      @draft_count = base_scope.where(status: :draft).count
+      scope = base_scope.left_joins(:articles).group(:id).order(:name).select("categories.*, COUNT(articles.id) AS articles_count")
+      @categories = paginate_collection(scope)
     end
 
     def new

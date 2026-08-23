@@ -1,11 +1,8 @@
 <% content_for :title, "Дашборд — DG CMS" %>
+<% content_for :admin_section_title, "Дашборд" %>
+<% content_for :admin_section_icon do %><%= admin_icon(:dashboard) %><% end %>
 
 <div class="admin-container">
-  <div class="page-heading">
-    <div><p class="page-eyebrow">Панель управления</p><h1>Дашборд</h1></div>
-    <p class="page-date"><%= I18n.l(Date.current, format: "%d.%m.%Y") %></p>
-  </div>
-
   <div class="stats-grid">
     <% @stats.each do |stat| %>
       <%= render "admin/shared/stat_card", **stat %>
@@ -25,7 +22,7 @@
             <% if @recent_articles.any? %>
               <% @recent_articles.each do |article| %>
                 <tr>
-                  <td><%= link_to article.rendered_title, edit_admin_article_path(article), class: "material-title" %><span class="material-category"><%= article.category&.rendered_name %></span></td>
+                  <td><%= link_to article.rendered_title, edit_admin_article_path(article), class: "material-title" %><span class="material-category"><span>Категория:</span> <%= article.category&.rendered_name || "—" %></span></td>
                   <td><span class="status-badge is-<%= article.status %>"><%= article.published? ? "Опубликовано" : "Черновик" %></span></td>
                   <td class="material-date"><%= (article.published_at || article.created_at).strftime("%d.%m.%Y") %></td>
                 </tr>
@@ -36,7 +33,6 @@
           </tbody>
         </table>
       </div>
-      <%= link_to admin_articles_path, class: "all-materials-link" do %>Перейти ко всем статьям <%= admin_icon(:chevron_right) %><% end %>
     </section>
 
     <aside class="panel quick-panel">
